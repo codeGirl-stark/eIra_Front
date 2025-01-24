@@ -1,0 +1,29 @@
+.ul {
+    @apply menu text-base uppercase font-semibold;
+}
+
+.link{
+    @apply focus:bg-slate-300  focus:text-blue-600 ;
+}
+
+.ul li {
+    @apply py-3;
+}
+
+.divLoader {
+    @apply flex h-screen items-center justify-center bg-white;
+}
+.Loader{
+    @apply h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent;
+}
+
+.input{
+    @apply file-input file-input-bordered w-full max-w-xs;
+}
+
+.waitingSpan {
+    @apply loading loading-dots loading-lg bg-white;
+}
+.waitingButton {
+    @apply flex btn-wide justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium hover:bg-opacity-90;
+}

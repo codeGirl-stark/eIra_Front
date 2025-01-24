@@ -1,0 +1,56 @@
+.login {
+    @apply flex justify-center mt-[8%] lg:flex-row flex-col;
+}
+
+.image{
+    @apply ml-2 w-auto h-[20%] lg:h-[10%];
+}
+
+.section {
+    @apply w-full py-[2%] ml-2 lg:ml-10 lg:w-[30%];
+}
+
+.logo {
+    @apply flex justify-center -ml-[15%];
+}
+
+
+.h1{
+   @apply font-bold text-2xl lg:text-3xl uppercase mt-[8%] md:mt-[4%] lg:mt-[10%] xl:mt-[8%] 2xl:mt-[6%];
+}
+
+.form{
+    @apply p-5 lg:p-0 w-full lg:ml-[5%] flex flex-col items-center lg:items-start lg:mt-5;
+}
+
+.label {
+    @apply input input-bordered flex items-center mb-10 w-full;
+}
+
+
+.form div {
+    @apply flex flex-col lg:flex-row justify-between w-full;
+}
+
+.form div label {
+    @apply input input-bordered flex items-center w-full lg:w-[48%] mb-5;;
+}
+
+.submitButton {
+    @apply btn btn-wide px-20 bg-blue-600 text-white lg:w-auto lg:ml-[15%] xl:ml-[32%];
+}
+
+.waitingSpan {
+    @apply loading loading-dots loading-lg bg-white;
+}
+.waitingButton {
+    @apply btn btn-wide px-20 bg-blue-600 lg:w-auto lg:ml-[15%] xl:ml-[32%];
+}
+
+.p{
+    @apply text-base;
+}
+
+.verif {
+    @apply text-center text-lg mt-[10%];
+}
