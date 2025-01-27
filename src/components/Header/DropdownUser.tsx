@@ -20,20 +20,20 @@ const DropdownUser = () => {
                 return;
             }
 
-            axios.get(`${apiUrl}medecin/profile/`,{
+            axios.get(`${apiUrl}medecin/photoProfile/`,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
                 }
             })
             .then(response =>{
-                const fetchedProfile = response.data;
-                // Si la photo est "null" ou vide, on définit une valeur par défaut
-                const photoUrl =
-                fetchedProfile.photo === "null" || !fetchedProfile.photo
-                    ? "/avatar.png"
-                    : `http://localhost:8000${fetchedProfile.photo}`;
-                setProfilePicture(photoUrl)
+                // Récupérer l'avatar (ou une valeur par défaut si l'avatar est null ou non défini)
+                const avatarUrl = response.data[0].avatar
+                ? response.data[0].avatar // URL de l'avatar si disponible
+                : "/avatar.png"; // Avatar par défaut
+
+                // Définir la photo de profil dans le state
+                setProfilePicture(avatarUrl);
             })
             .catch(error =>{
                 //alert(error)
@@ -108,7 +108,7 @@ const DropdownUser = () => {
                         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-8 dark:border-strokedark">
                             <li>
                             <Link
-                                href="../../infoPapier"
+                                href="../../profilMedecin"
                                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                             >
                                 <svg
@@ -133,7 +133,7 @@ const DropdownUser = () => {
                             </li>
                             <li>
                             <Link
-                                href="../../parametres"
+                                href="../../profilMedecin"
                                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                             >
                                 <svg 
@@ -152,7 +152,7 @@ const DropdownUser = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="../../parametres"
+                                    href="#"
                                     className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                                 >
                                     <svg

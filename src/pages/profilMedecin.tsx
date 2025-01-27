@@ -9,9 +9,7 @@ import axios from "axios";
 import Link from "next/link";
 
 interface User {
-    [x: string]: any;
     specialite: string;
-    photo: string | File; // Modifiez ceci
     years_of_experience: number;
     phone_number: string;
     bio: string;
@@ -23,6 +21,7 @@ export const ProfilMedecin: FC = () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [loading, setLoading] = useState<boolean>(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [profileExists, setProfileExists] = useState(false); // Nouvel état pour vérifier l'existence du profil
     const [profilePicture, setProfilePicture] = useState("/avatar.png");
     
@@ -30,7 +29,6 @@ export const ProfilMedecin: FC = () => {
     // État pour stocker les données du profil
     const [profile, setProfile] = useState<User>({
         specialite : "",
-        photo:"/avatar.png",
         years_of_experience : 0,
         phone_number : "",
         bio:""
@@ -56,19 +54,7 @@ export const ProfilMedecin: FC = () => {
             .then(response =>{
                 if (response.status === 200) {
                     setProfileExists(true); // Le profil existe
-                    const fetchedProfile = response.data;
-                    // Si la photo est "null" ou vide, on définit une valeur par défaut
-                    const photoUrl =
-                    fetchedProfile.photo === "null" || !fetchedProfile.photo
-                        ? "/avatar.png"
-                        : `http://localhost:8000${fetchedProfile.photo}`;
-
-                    // Mettre à jour le profil avec les données récupérées
-                    setProfile({
-                        ...fetchedProfile,
-                        photo: photoUrl, // Utiliser l'URL de la photo ou un avatar par défaut
-                    });
-                    setProfilePicture(photoUrl)
+                    setProfile(response.data)
                     
                 } else {
                     setProfileExists(false);
@@ -84,26 +70,18 @@ export const ProfilMedecin: FC = () => {
     }, [apiUrl]);
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const InfohandleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-    
-        if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
-            const files = e.target.files;
-            setProfile({
-                ...profile,
-                [name]: files ? files[0] : null,
-            });
-        } else {
-            // Gestion du cas des `select` et autres `input` non fichier
-            setProfile({
-                ...profile,
-                [name]: value,
-            });
-        }
+        setProfile({ 
+            ...profile, 
+            [name]: value 
+        });
+       
     };
 
+
     //Modifier le profil
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+    const InfohandleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     
         const access = localStorage.getItem('access_token');
@@ -116,21 +94,10 @@ export const ProfilMedecin: FC = () => {
 
         const form = new FormData();
 
-        for (const key in profile) {
-            const value = profile[key as keyof User];
-    
-            // Vérifiez si le champ est un fichier et qu'il est non nul avant de l'ajouter
-            if (key.includes("photo")) {
-                if (value !== null) {
-                    form.append(key, value as Blob);
-                }
-            }else {
-                // Ajoutez tous les autres champs
-                form.append(key, value as string);
-            }
-        }
 
-        console.log(profileExists)
+        for (const key in profile) {
+            form.append(key, profile[key as keyof User] as Blob | string);
+        }
 
         if (profileExists) {
             // Mettre à jour le profil existant
@@ -202,6 +169,120 @@ export const ProfilMedecin: FC = () => {
         }
     };
 
+
+    /** 
+     * CRUD DE LA PHOTO DE PROFIL
+    */
+    //Récupérer la photo de profil du user
+    useEffect(() => {
+        const fetchProfilePicture = async () => {
+            const access = localStorage.getItem('access_token');
+            if (!access) {
+                router.push("/profilMedecin");
+                setIsSubmitted(false)
+            }
+
+            axios.get(`${apiUrl}medecin/photoProfile/`,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${access}`,  // Si authentification requise
+                }
+            })
+            .then(response =>{
+                // Récupérer l'avatar (ou une valeur par défaut si l'avatar est null ou non défini)
+                const avatarUrl = response.data[0].avatar
+                ? response.data[0].avatar // URL de l'avatar si disponible
+                : "/avatar.png"; // Avatar par défaut
+
+                // Définir la photo de profil dans le state
+                setProfilePicture(avatarUrl);
+            })
+            .catch(error =>{
+                //alert(error)
+                console.error("Error fetching profile picture", error)
+            })
+        };
+
+        fetchProfilePicture();
+
+    }, [apiUrl]);
+
+
+    //Récupérer les valeurs du champs de photo 
+    const handleFileChange = (event: any) => {
+        setSelectedFile(event.target.files[0]);
+    };
+
+    //Ajouter une photo de profil
+    const handleFileSubmit = async(event : any) =>{
+        event.preventDefault();
+
+        if (!selectedFile) {
+            alert('Veuillez choisir un fichier avant de soumettre.');
+            return;
+        }
+        setIsSubmitted(true)
+        const formData = new FormData();
+        formData.append('avatar', selectedFile);
+
+        const access = localStorage.getItem('access_token')
+        if (!access) {
+            router.push("/doctorLogin");
+            return;
+        }
+
+        axios.post(
+            `${apiUrl}medecin/photoProfile/`, formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${access}`,  // Si authentification requise
+                }
+            }
+        )
+        .then(response =>{
+            setIsSubmitted(false)
+            router.push('/profilMedecin')
+            setSelectedFile(null);
+        })
+        .catch(error =>{
+            setIsSubmitted(false)
+            alert(error.message)
+            console.error("erreur lors du chargement de la photo", error)
+        })
+    }
+
+     //Supprimer le profil
+     const handleFileDelete = async (id : any) => {
+        if (window.confirm("Êtes-vous sûr de vouloir supprimer votre avatar ?")) {
+            setLoading(true);
+            console.error(null);
+
+            const accessToken = localStorage.getItem('access_token');
+            if (!accessToken) {
+                router.push("/doctorLogin");
+                return;
+            }
+
+            await axios.delete(`${apiUrl}medecin/photoProfile/`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+                .then(response =>{
+                    alert("Avatar supprimé avec succès !"); // Enregistre les Patients dans le state
+                    router.push("/profilMedecin");                    
+                    setLoading(false)
+                })
+                .catch(error =>{
+                    alert(error.response.data.erreur)
+                    console.error('Erreur lors de la suppression de la phpto');
+                    setLoading(false)
+                })
+        }
+    };
+
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [router]);
@@ -238,7 +319,7 @@ export const ProfilMedecin: FC = () => {
                                                 type="text"
                                                 name="specialite"
                                                 value={profile.specialite}
-                                                onChange={handleChange}
+                                                onChange={InfohandleChange}
                                                 className="w-full cursor-pointer rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                                 required
                                             />
@@ -253,7 +334,7 @@ export const ProfilMedecin: FC = () => {
                                                 type="number"
                                                 name="years_of_experience"
                                                 value={profile.years_of_experience}
-                                                onChange={handleChange}
+                                                onChange={InfohandleChange}
                                                 className="w-full cursor-pointer rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                                 required
                                             />
@@ -268,7 +349,7 @@ export const ProfilMedecin: FC = () => {
                                             type="text"
                                             name="phone_number"
                                             value={profile.phone_number}
-                                            onChange={handleChange}
+                                            onChange={InfohandleChange}
                                             className="w-full cursor-pointer rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                             required
                                         />
@@ -280,13 +361,29 @@ export const ProfilMedecin: FC = () => {
                                         <textarea 
                                             name="bio"
                                             value={profile.bio}
-                                            onChange={handleChange}
+                                            onChange={InfohandleChange}
                                             className="w-full  rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                             placeholder="Entrez une description.."
                                             >
                                         </textarea>
                                     </div>
-                                    
+                                    {isSubmitted?(
+                                <div className="flex justify-end">
+                                    <button type="submit" className={styles.waitingButton}>
+                                        <span className={styles.waitingSpan}></span>
+                                    </button>
+                                </div>
+                            ):(
+                                <div className="flex justify-between">
+                                    <button onClick={handleDelete} className="flex justify-center rounded-md bg-red-700 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
+                                        Supprimer
+                                    </button>
+
+                                    <button onClick={InfohandleSubmit} className="flex justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
+                                        Enregistrer
+                                    </button>
+                                </div>                                    
+                            )}   
                                 </div>
                         </div>
                         {/* FIN SECTION INFORMATIONS PERSONNELLES */}
@@ -339,7 +436,7 @@ export const ProfilMedecin: FC = () => {
                                             type="file"
                                             name="photo"
                                             accept="image/*"
-                                            onChange={handleChange}
+                                            onChange={handleFileChange}
                                             className="inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
                                         />
                                         <div className="flex flex-col items-center justify-center space-y-3">
@@ -381,23 +478,11 @@ export const ProfilMedecin: FC = () => {
                                     </div>
                                 </div>
                             </div>  
-                            {isSubmitted?(
-                                <div className="flex justify-end">
-                                    <button type="submit" className={styles.waitingButton}>
-                                        <span className={styles.waitingSpan}></span>
-                                    </button>
-                                </div>
-                            ):(
-                                <div className="flex justify-between">
-                                    <button onClick={handleDelete} className="flex  justify-center rounded-md bg-red-700 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
-                                        Supprimer
-                                    </button>
-
-                                    <button onClick={handleSubmit} className="flex  justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
-                                        Enregistrer
-                                    </button>
-                                </div>                                    
-                            )}   
+                            <div className="flex justify-end">
+                                <button onClick={handleFileSubmit} className="flex  justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
+                                    Enregistrer
+                                </button>
+                            </div>  
                         </div>
                         {/* FIN SECTION MODIFIER PHOTO DE PROFIL */}  
                     </div>

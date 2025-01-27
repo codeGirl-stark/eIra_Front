@@ -382,7 +382,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                         </li>
                                         <li>
                                           <Link
-                                            href="#"
+                                            href="../../dbExport"
                                             className='hover:text-white focus:text-white'
                                           >
                                             Exporter la base de données
