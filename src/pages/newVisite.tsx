@@ -95,7 +95,7 @@ export const NewVisite: React.FC = () => {
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
             }
         })
-        .then(response =>{
+        .then(() =>{
             setIsSubmitted(false)
             alert('Visite enregistrée avec succès');
             router.push('visites')

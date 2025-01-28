@@ -213,7 +213,7 @@ export const GetDossier: React.FC = () => {
                     Authorization: `Bearer ${access}`,
                 },
             })
-            .then((response) => {
+            .then(() => {
                 setIsSubmitted(false);
                 alert("Dossier modifié avec succès");
                 router.push("/listePatients");

@@ -49,7 +49,7 @@ export const Login : React.FC = () =>{
                             'Authorization': `Bearer ${access}`,  // Si authentification requise
                         }
                     })
-                    .then(response =>{
+                    .then(() =>{
                         //router.push('/dashboard')
                         alert('Vous êtes connecté')
                     })

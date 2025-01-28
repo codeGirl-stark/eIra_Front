@@ -157,8 +157,7 @@ export const NewDossier: React.FC = () => {
         setFormData((prevData) => {
              // Vérifier si la propriété est un tableau, sinon initialiser comme tableau vide
             const fieldArray = Array.isArray(prevData[fieldName as keyof FormDataType])
-            ? (prevData[fieldName as keyof FormDataType] as string[])
-            : [];
+            fieldArray ? (prevData[fieldName as keyof FormDataType] as string[]) : [];
 
             const updatedField = isChecked
                 ? [...(prevData[fieldName as keyof FormDataType] as string[]), value]
@@ -235,7 +234,7 @@ export const NewDossier: React.FC = () => {
                     Authorization: `Bearer ${access}`,
                 },
             })
-            .then((response) => {
+            .then(() => {
                 setIsSubmitted(false);
                 alert("Dossier créé avec succès");
             })

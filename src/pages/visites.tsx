@@ -123,7 +123,7 @@ const VisitesByDate = () => {
                 },
                 data: { id },
             })
-                .then(response =>{
+                .then(() =>{
                     alert("Visite annulée avec succès !"); // Enregistre les Patients dans le state
                     setVisites((prevVisites) => prevVisites.filter(visite => visite.id !== id));
                     setLoading(false)

@@ -69,7 +69,7 @@ export const ListePatient: React.FC = () => {
                 },
                 data: { id },
             })
-                .then(response =>{
+                .then(() =>{
                     alert("Patient supprimé avec succès !"); // Enregistre les Patients dans le state
                     setPatients((prevPatients) => prevPatients.filter(patient => patient.id !== id));
                     setLoading(false)

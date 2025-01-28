@@ -1,12 +1,11 @@
 import DefaultLayout from "@/components/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Loader from "@/common/Loader"; 
-import styles from "../styles/common.module.css"
 import { useState, useEffect, FC } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import axios from "axios";
-import Link from "next/link";
+
 
 interface User {
     specialite: string;
@@ -20,7 +19,6 @@ export const ProfilMedecin: FC = () => {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [loading, setLoading] = useState<boolean>(true);
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [profileExists, setProfileExists] = useState(false); // Nouvel état pour vérifier l'existence du profil
     const [profilePicture, setProfilePicture] = useState("/avatar.png");
@@ -90,8 +88,6 @@ export const ProfilMedecin: FC = () => {
             return;
         }
     
-        setIsSubmitted(true);
-
         const form = new FormData();
 
 
@@ -107,13 +103,11 @@ export const ProfilMedecin: FC = () => {
                     Authorization: `Bearer ${access}`,
                 },
             })
-            .then(response =>{
+            .then(() =>{
                 alert('Profil mis à jour avec succès');
                 router.push("/profilMedecin");
-                setIsSubmitted(false)
             })
             .catch(error =>{
-                setIsSubmitted(false)
                 //alert(error)
                 console.error("Erreur lors de la mise à jour :", error)
             })
@@ -124,14 +118,12 @@ export const ProfilMedecin: FC = () => {
                     Authorization: `Bearer ${access}`,
                 },
             })
-            .then(response =>{
+            .then(() =>{
                 alert('Profil créé avec succès');
                 router.push("/profilMedecin");
                 setProfileExists(true); // Marquer le profil comme existant
-                setIsSubmitted(false)
             })
             .catch(error =>{
-                setIsSubmitted(false)
                 //alert(error)
                 console.error("Erreur lors de la mise à jour :", error)
             })
@@ -139,7 +131,7 @@ export const ProfilMedecin: FC = () => {
     };
     
     //Supprimer le profil
-    const handleDelete = async (id : any) => {
+    const handleDelete = async () => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer votre profil ?")) {
             setLoading(true);
             console.error(null);
@@ -156,7 +148,7 @@ export const ProfilMedecin: FC = () => {
                     'Authorization': `Bearer ${accessToken}`,
                 }
             })
-                .then(response =>{
+                .then(() =>{
                     alert("Patient supprimé avec succès !"); // Enregistre les Patients dans le state
                     router.push("/profilMedecin");                    
                     setLoading(false)
@@ -179,7 +171,6 @@ export const ProfilMedecin: FC = () => {
             const access = localStorage.getItem('access_token');
             if (!access) {
                 router.push("/profilMedecin");
-                setIsSubmitted(false)
             }
 
             axios.get(`${apiUrl}medecin/photoProfile/`,{
@@ -221,7 +212,6 @@ export const ProfilMedecin: FC = () => {
             alert('Veuillez choisir un fichier avant de soumettre.');
             return;
         }
-        setIsSubmitted(true)
         const formData = new FormData();
         formData.append('avatar', selectedFile);
 
@@ -239,20 +229,18 @@ export const ProfilMedecin: FC = () => {
                 }
             }
         )
-        .then(response =>{
-            setIsSubmitted(false)
+        .then(() =>{
             router.push('/profilMedecin')
             setSelectedFile(null);
         })
         .catch(error =>{
-            setIsSubmitted(false)
             alert(error.message)
             console.error("erreur lors du chargement de la photo", error)
         })
     }
 
      //Supprimer le profil
-     const handleFileDelete = async (id : any) => {
+     const handleFileDelete = async () => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer votre avatar ?")) {
             setLoading(true);
             console.error(null);
@@ -269,7 +257,7 @@ export const ProfilMedecin: FC = () => {
                     'Authorization': `Bearer ${accessToken}`,
                 }
             })
-                .then(response =>{
+                .then(() =>{
                     alert("Avatar supprimé avec succès !"); // Enregistre les Patients dans le state
                     router.push("/profilMedecin");                    
                     setLoading(false)
@@ -367,23 +355,15 @@ export const ProfilMedecin: FC = () => {
                                             >
                                         </textarea>
                                     </div>
-                                    {isSubmitted?(
-                                <div className="flex justify-end">
-                                    <button type="submit" className={styles.waitingButton}>
-                                        <span className={styles.waitingSpan}></span>
-                                    </button>
-                                </div>
-                            ):(
-                                <div className="flex justify-between">
-                                    <button onClick={handleDelete} className="flex justify-center rounded-md bg-red-700 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
-                                        Supprimer
-                                    </button>
+                                    <div className="flex justify-between">
+                                        <button onClick={handleDelete} className="flex justify-center rounded-md bg-red-700 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
+                                            Supprimer
+                                        </button>
 
-                                    <button onClick={InfohandleSubmit} className="flex justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
-                                        Enregistrer
-                                    </button>
-                                </div>                                    
-                            )}   
+                                        <button onClick={InfohandleSubmit} className="flex justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
+                                            Enregistrer
+                                        </button>
+                                    </div>  
                                 </div>
                         </div>
                         {/* FIN SECTION INFORMATIONS PERSONNELLES */}
@@ -413,7 +393,7 @@ export const ProfilMedecin: FC = () => {
                                     <div className="py-3 px-5">
                                         <h4 className="text-xs xl:text-base dark:text-white">Editer la photo de profil</h4>
                                         <div className="flex justify-start">
-                                            <button className="mr-3 text-gray-400">Supprimer</button>
+                                            <button onClick={handleFileDelete} className="mr-3 text-gray-400">Supprimer</button>
                                             <button className="text-gray-400">Modifier</button>
                                         </div>
                                     </div>

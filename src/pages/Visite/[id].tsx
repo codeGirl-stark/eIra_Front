@@ -157,7 +157,7 @@ export const UpdateVisite: React.FC = () => {
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
             }
         })
-        .then(response =>{
+        .then(() =>{
             setIsSubmitted(false)
             alert('Visite modifiée avec succès');
             router.push(`/visites`)
