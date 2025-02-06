@@ -2,12 +2,10 @@ import Image from "next/image";
 
 import Head from "next/head";
 import Navbar from "@/components/HomePage/Navbar";
-import bgEira from "../../public/HomePage/bgEira.jpg";
 import { Container } from "@/components/HomePage/Container";
 import { Hero } from "@/components/HomePage/Hero";
 import { SectionTitle } from "@/components/HomePage/SectionTitle";
 import { Benefits } from "@/components/HomePage/Benefits";
-import { Testimonials } from "@/components/HomePage/Testimonials";
 import { Faq } from "@/components/HomePage/Faq";
 import { Cta } from "@/components/HomePage/Cta";
 import Footer from "@/components/HomePage/Footer";

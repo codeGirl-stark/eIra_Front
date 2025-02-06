@@ -1,5 +1,4 @@
 import axios from "axios";
-import Link from "next/link";
 import Loader from "@/common/Loader";
 import { useRouter } from "next/router";
 import {useEffect, useState} from "react";

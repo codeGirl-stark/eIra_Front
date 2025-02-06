@@ -182,7 +182,7 @@ export const ListePatient: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {currentMedecins.map((medecin: MedecinInterface, index) => (
+                                {currentMedecins.map((medecin: MedecinInterface) => (
                                     <tr key={medecin.id}>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                             <p className="text-black dark:text-white font-bold">

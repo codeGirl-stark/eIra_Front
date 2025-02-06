@@ -69,8 +69,8 @@ const CircleChart: React.FC<CircleChartProps> = ({ data, labels, colors, title }
       tooltip: {
         callbacks: {
           label: (tooltipItem: any) => {
-            let value = tooltipItem.raw;
-            let percentage = ((value / total) * 100).toFixed(1); // Calcul %
+            const value = tooltipItem.raw;
+            const percentage = ((value / total) * 100).toFixed(1); // Calcul %
             return `${labels[tooltipItem.dataIndex]}: ${percentage}%`;
           },
         },

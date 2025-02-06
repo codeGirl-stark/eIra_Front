@@ -247,7 +247,7 @@ const VisitesByDate = () => {
                         </tr>
                       </thead>
                       <tbody>
-                      {currentPatients.map((visite: VisiteInterface, index) => (
+                      {currentPatients.map((visite: VisiteInterface) => (
                           <tr key={visite.id}>
                               <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                   <p className="text-black dark:text-white font-bold">

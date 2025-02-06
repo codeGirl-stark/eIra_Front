@@ -39,7 +39,7 @@ const ChartOne: React.FC = () => {
     const [data3, setData3] = useState<number[]>([]);
     const [statistiques, setStatistiques] = useState<ClassificationsInterface | null>(null);
 
-    const [options, setOptions] = useState<ApexOptions>({
+    const [options] = useState<ApexOptions>({
         legend: {
           show: false,
           position: 'top',

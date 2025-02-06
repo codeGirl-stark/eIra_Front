@@ -55,7 +55,7 @@ export const NewPatient: React.FC = () => {
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
             }
         })
-        .then(response =>{
+        .then(() =>{
             setIsSubmitted(false)
             alert('Médécin créé avec succès');
             router.push("/admin/allDocteurs")

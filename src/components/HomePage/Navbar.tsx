@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Disclosure } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import DarkModeSwitcher from "../Header/DarkModeSwitcher";
 import Image from "next/image";
 
 export default function Navbar() {

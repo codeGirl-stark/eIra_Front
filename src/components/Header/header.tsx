@@ -2,8 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
 import axios from "axios";
-import DropdownMessage from './DropdownMessage';
-import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import Image from 'next/image';
