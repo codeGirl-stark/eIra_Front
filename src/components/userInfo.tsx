@@ -24,11 +24,11 @@ const UserInfo: FC<UserInfoProps> = ({ children }) => {
     const fetchUser = async () => {
         const access = localStorage.getItem('access_token');
         if (!access) {
-            console.error('No token found');
+            router.push("/doctorLogin");
             return;
         }
 
-        axios.get(`${apiUrl}admin_app/infoDocteur/`, {
+        axios.get(`${apiUrl}/admin_app/infoDocteur/`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -43,7 +43,7 @@ const UserInfo: FC<UserInfoProps> = ({ children }) => {
             }
         })
         .catch(error =>{
-            //alert(error)
+            alert(error?.response?.data?.erreur || "Erreur lors de la récupération du profil !");
             console.log(error);
         })
     };

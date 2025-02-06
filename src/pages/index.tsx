@@ -1,114 +1,149 @@
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import Head from "next/head";
+import Navbar from "@/components/HomePage/Navbar";
+import bgEira from "../../public/HomePage/bgEira.jpg";
+import { Container } from "@/components/HomePage/Container";
+import { Hero } from "@/components/HomePage/Hero";
+import { SectionTitle } from "@/components/HomePage/SectionTitle";
+import { Benefits } from "@/components/HomePage/Benefits";
+import { Testimonials } from "@/components/HomePage/Testimonials";
+import { Faq } from "@/components/HomePage/Faq";
+import { Cta } from "@/components/HomePage/Cta";
+import Footer from "@/components/HomePage/Footer";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { benefitOne, benefitTwo } from "@/components/HomePage/data";
+
 
 export default function Home() {
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <>
+      <Head>
+        <title>eIra - L&apos;application du médecin</title>
+        <meta
+          name="description"
+          content="Gérer vos Patients autrment"
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <link rel="icon" href="/Logo aliklan-fav.ico" />
+      </Head>
+      <Navbar />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      <Container>
+        <Hero />
+        <SectionTitle
+          preTitle="eIra c&apos;est quoi?"
+          title="À propos de eIra"
+        >
+          eIra est une plateforme conçue pour simplifier la gestion des patients en irathérapie. 
+          Elle permet aux médecins de centraliser les dossiers médicaux, d&apos;organiser les visites et de suivre efficacement l&apos;évolution des traitements. 
+          Grâce à une interface intuitive et sécurisée, eIra optimise votre gestion quotidienne pour vous faire gagner du temps et améliorer la prise en charge des patients.        
+        </SectionTitle>
+
+        <Benefits data={benefitOne} />
+        <Benefits imgPos="right" data={benefitTwo} />
+
+        <SectionTitle
+          preTitle="Quelques captures"
+          title="Des fonctionnalités de eIra"
+        >
+          Plongez au cœur de l’expérience eIra à travers ces aperçus de l’interface.  
+          Découvrez comment la plateforme simplifie la gestion des dossiers médicaux,  
+          optimise le suivi des patients et facilite l&apos;organisation des consultations.  
+        </SectionTitle>
+
+        <div className="p-5 grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+          <Image
+              src="/capture/connexion.png"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          <Image
+              src="/capture/dashboard.png"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
+          <Image
+              src="/capture/profil.png"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <div className="p-5 grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <Image
+              src="/capture/newPatient.png"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+              src="/capture/newDossier.png"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
           <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+              src="/capture/newVisite.png"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
+        </div>
+
+        <SectionTitle preTitle="FAQ" title="Des questions ? Nous avons les réponses !">
+          Vous vous demandez comment eIra peut améliorer votre gestion des patients ? 
+          Découvrez les réponses aux questions les plus fréquentes et voyez comment notre solution peut transformer votre quotidien médical.
+        </SectionTitle>
+
+        <Faq />
+
+        <SectionTitle
+          preTitle="Optimisez votre pratique médicale avec eIra !"
+          title="Passez à l’irathérapie moderne dès aujourd’hui !"
         >
+          Ne perdez plus de temps avec des dossiers dispersés et une organisation chronophage. 
+          eIra vous offre un espace centralisé pour gérer vos patients, planifier vos visites et sécuriser vos données médicales. 
+          Faites le choix de l’innovation et simplifiez votre quotidien dès maintenant !
+        </SectionTitle>
+        <div className="xl:ml-10 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
           <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+              src="/HomePage/bgEira.jpg"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
+          <Image
+              src="/HomePage/yesphone.jpg"
+              width="616"
+              height="617"
+              className={"object-cover"}
+              alt="Hero Illustration"
+              loading="eager"
+            />
+        </div>
+
+        
+
+        <Cta />
+        <Footer />
+      
+      </Container>
+    </>
   );
 }

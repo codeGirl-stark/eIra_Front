@@ -17,6 +17,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/DossierSteps/step1.jsx", "src/components/DossierSteps/step5.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/DossierSteps/step1.jsx", "src/components/DossierSteps/step5.jsx", "src/components/HomePage/misc/ButtonOutline.jsx", "src/components/HomePage/Layout/Layout.jsx"],
   "exclude": ["node_modules"]
 }

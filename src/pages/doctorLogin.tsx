@@ -24,7 +24,7 @@ export const Login : React.FC = () =>{
             setIsSubmitted(true);
         }
         
-        axios.post(`${apiUrl}admin_app/login/`, 
+        axios.post(`${apiUrl}/admin_app/login/`, 
             {
                 "email":email, 
                 "password":password, 
@@ -43,19 +43,18 @@ export const Login : React.FC = () =>{
                     router.push('/login');
                 } else {
 
-                    axios.get(`${apiUrl}admin_app/protected/`, {
+                    axios.get(`${apiUrl}/admin_app/protected/`, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
                             'Authorization': `Bearer ${access}`,  // Si authentification requise
                         }
                     })
                     .then(() =>{
-                        //router.push('/dashboard')
-                        alert('Vous êtes connecté')
+                        router.push('/dashboard')
                     })
                     .catch(error =>{
                         setIsSubmitted(false)
-                        alert(error.response.data.non_field_errors[0])
+                        alert(error?.response?.data?.erreur || "Erreur lors de la connexion !");
                     })
                 }
 
@@ -113,7 +112,7 @@ export const Login : React.FC = () =>{
                     localStorage.removeItem('access_token');
                     localStorage.removeItem('refresh_token');
                     console.log("Token expiré, redirection vers la page de connexion");
-                    router.push('/login');
+                    router.push('/doctorLogin');
                 } else {
                     console.log("Le token est toujours valide");
                 }
@@ -136,7 +135,7 @@ export const Login : React.FC = () =>{
             <div className={styles.login}>
                 <Image 
                     src="/accueil.jpeg"
-                    alt="une image de covoiturage"
+                    alt="une image de medecine"
                     width={500}
                     height={200}
                     className={styles.image}

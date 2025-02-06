@@ -1,5 +1,6 @@
 import DefaultLayout from "@/components/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
+import avatarImage from '../../public/avatar.png';
 import Loader from "@/common/Loader"; 
 import { useState, useEffect, FC } from "react";
 import { useRouter } from "next/router";
@@ -20,7 +21,7 @@ export const ProfilMedecin: FC = () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [profileExists, setProfileExists] = useState(false); // Nouvel état pour vérifier l'existence du profil
+    const [profileExists, setProfileExists] = useState(false);
     const [profilePicture, setProfilePicture] = useState("/avatar.png");
     
 
@@ -43,7 +44,7 @@ export const ProfilMedecin: FC = () => {
                 return;
             }
             
-            axios.get(`${apiUrl}medecin/profile/`, {
+            axios.get(`${apiUrl}/medecin/profile/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -59,7 +60,7 @@ export const ProfilMedecin: FC = () => {
                 }
             })
             .catch(error =>{
-                //alert(error)
+                alert(error?.response?.data?.erreur || "Erreur lors de la récupération du profil !");
                 console.log(error);
                 setProfileExists(false);
             })
@@ -97,7 +98,7 @@ export const ProfilMedecin: FC = () => {
 
         if (profileExists) {
             // Mettre à jour le profil existant
-            axios.patch(`${apiUrl}medecin/profile/`, form, {
+            axios.patch(`${apiUrl}/medecin/profile/`, form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${access}`,
@@ -105,14 +106,14 @@ export const ProfilMedecin: FC = () => {
             })
             .then(() =>{
                 alert('Profil mis à jour avec succès');
-                router.push("/profilMedecin");
+                window.location.reload();
             })
             .catch(error =>{
-                //alert(error)
+                alert(error?.response?.data?.erreur || "Erreur lors de la mise à jour du profil !");
                 console.error("Erreur lors de la mise à jour :", error)
             })
         } else {
-            axios.post(`${apiUrl}medecin/profile/`, form, {
+            axios.post(`${apiUrl}/medecin/profile/`, form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${access}`,
@@ -120,11 +121,11 @@ export const ProfilMedecin: FC = () => {
             })
             .then(() =>{
                 alert('Profil créé avec succès');
-                router.push("/profilMedecin");
+                window.location.reload();
                 setProfileExists(true); // Marquer le profil comme existant
             })
             .catch(error =>{
-                //alert(error)
+                alert(error?.response?.data?.erreur || "Erreur lors de la création du profil !");
                 console.error("Erreur lors de la mise à jour :", error)
             })
         }
@@ -142,20 +143,19 @@ export const ProfilMedecin: FC = () => {
                 return;
             }
 
-            await axios.delete(`${apiUrl}medecin/profile/`, {
+            await axios.delete(`${apiUrl}/medecin/profile/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
                 }
             })
                 .then(() =>{
-                    alert("Patient supprimé avec succès !"); // Enregistre les Patients dans le state
-                    router.push("/profilMedecin");                    
+                    alert("Profil supprimé avec succès !"); // Enregistre les Patients dans le state
+                    window.location.reload();                    
                     setLoading(false)
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Erreur lors de la suppression du profil');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la suppression !");
                     setLoading(false)
                 })
         }
@@ -170,10 +170,10 @@ export const ProfilMedecin: FC = () => {
         const fetchProfilePicture = async () => {
             const access = localStorage.getItem('access_token');
             if (!access) {
-                router.push("/profilMedecin");
+                router.push("/doctorLogin");
             }
 
-            axios.get(`${apiUrl}medecin/photoProfile/`,{
+            axios.get(`${apiUrl}/medecin/photoProfile/`,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -181,15 +181,13 @@ export const ProfilMedecin: FC = () => {
             })
             .then(response =>{
                 // Récupérer l'avatar (ou une valeur par défaut si l'avatar est null ou non défini)
-                const avatarUrl = response.data[0].avatar
-                ? response.data[0].avatar // URL de l'avatar si disponible
-                : "/avatar.png"; // Avatar par défaut
+                const avatarUrl = (response.data && response.data[0] && response.data[0].avatar) ? response.data[0].avatar : avatarImage;
 
                 // Définir la photo de profil dans le state
                 setProfilePicture(avatarUrl);
             })
             .catch(error =>{
-                //alert(error)
+                alert(error?.response?.data?.erreur || "Erreur lors de la récupération de la photo !");
                 console.error("Error fetching profile picture", error)
             })
         };
@@ -222,7 +220,7 @@ export const ProfilMedecin: FC = () => {
         }
 
         axios.post(
-            `${apiUrl}medecin/photoProfile/`, formData,{
+            `${apiUrl}/medecin/photoProfile/`, formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -230,11 +228,11 @@ export const ProfilMedecin: FC = () => {
             }
         )
         .then(() =>{
-            router.push('/profilMedecin')
+            window.location.reload();
             setSelectedFile(null);
         })
         .catch(error =>{
-            alert(error.message)
+            alert(error?.response?.data?.erreur || "Erreur lors du chargement de la photo !");
             console.error("erreur lors du chargement de la photo", error)
         })
     }
@@ -251,7 +249,7 @@ export const ProfilMedecin: FC = () => {
                 return;
             }
 
-            await axios.delete(`${apiUrl}medecin/photoProfile/`, {
+            await axios.delete(`${apiUrl}/medecin/photoProfile/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
@@ -259,12 +257,11 @@ export const ProfilMedecin: FC = () => {
             })
                 .then(() =>{
                     alert("Avatar supprimé avec succès !"); // Enregistre les Patients dans le state
-                    router.push("/profilMedecin");                    
+                    window.location.reload();                  
                     setLoading(false)
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Erreur lors de la suppression de la phpto');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la suppression de la photo!");
                     setLoading(false)
                 })
         }

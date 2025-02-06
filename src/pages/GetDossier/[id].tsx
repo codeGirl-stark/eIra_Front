@@ -93,7 +93,7 @@ export const GetDossier: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/dossier/${id}/`, {
+            await axios.get(`${apiUrl}/dossier_medical/dossier/${id}/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
@@ -108,8 +108,7 @@ export const GetDossier: React.FC = () => {
                     }));
                 })
                 .catch(error =>{
-                    //alert(error.response.data.erreur[0])
-                    console.error('Échec de la récupération du dossier médical');
+                    alert(error?.response?.data?.erreur || "Echec de récupération du dossier !");
                     console.log(error)
                 })
         }
@@ -207,7 +206,7 @@ export const GetDossier: React.FC = () => {
         }
 
         axios
-            .put(`${apiUrl}dossier_medical/dossier/`, form, {
+            .put(`${apiUrl}/dossier_medical/dossier/`, form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${access}`,
@@ -219,6 +218,7 @@ export const GetDossier: React.FC = () => {
                 router.push("/listePatients");
             })
             .catch((error) => {
+                alert(error?.response?.data?.erreur || "Erreur lors de la modification !");
                 setIsSubmitted(false);
                 console.error(error);
             });

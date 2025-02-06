@@ -228,7 +228,7 @@ export const NewDossier: React.FC = () => {
         
 
         axios
-            .post(`${apiUrl}dossier_medical/dossier/`, form, {
+            .post(`${apiUrl}/dossier_medical/dossier/`, form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${access}`,
@@ -239,6 +239,7 @@ export const NewDossier: React.FC = () => {
                 alert("Dossier créé avec succès");
             })
             .catch((error) => {
+                alert(error?.response?.data?.erreur || "Erreur lors de la création !");
                 setIsSubmitted(false);
                 console.error(error);
             });

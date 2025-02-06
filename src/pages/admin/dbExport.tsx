@@ -2,8 +2,8 @@ import axios from "axios";
 import Loader from "@/common/Loader";
 import { useRouter } from "next/router";
 import {useState, useEffect} from "react";
-import styles from "../styles/common.module.css"
-import DefaultLayout from "@/components/Layout/DefaultLayout";
+import styles from "../../styles/common.module.css"
+import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 interface FormDataType {
@@ -37,7 +37,7 @@ export const NewVisite: React.FC = () => {
 
         const access = localStorage.getItem('access_token');
         if (!access) {
-            router.push('/doctorLogin')
+            router.push('/admin/login')
             return;
         }
 
@@ -49,7 +49,7 @@ export const NewVisite: React.FC = () => {
             form.append(key, formData[key as keyof FormDataType] as Blob | string);
         }
         
-        axios.post(`${apiUrl}medecin/export/`, form,{
+        axios.post(`${apiUrl}/medecin/export/`, form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -70,8 +70,8 @@ export const NewVisite: React.FC = () => {
             //router.push('visites')
         })
         .catch(error =>{
+            alert(error?.response?.data?.erreur || "Erreur lors du téléchargement !");
             setIsSubmitted(false)
-            //alert(error.response.data.non_field_errors[0])
             console.error(error);   
         })
     }
@@ -89,7 +89,7 @@ export const NewVisite: React.FC = () => {
         <Loader/>
       ) : (
         <DefaultLayout>
-            <Breadcrumb pageName="Nouvelle Visite Médicale" />
+            <Breadcrumb pageName="Base de données" />
 
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-center items-center p-10 bg-gray-100 dark:bg-gray-800 rounded-lg">

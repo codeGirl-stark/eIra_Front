@@ -47,7 +47,7 @@ export const UpdatePatient: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/patients/${id}/`, {
+            await axios.get(`${apiUrl}/dossier_medical/patients/${id}/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
@@ -63,8 +63,7 @@ export const UpdatePatient: React.FC = () => {
                     }));
                 })
                 .catch(error =>{
-                    //alert(error.response.data.erreur[0])
-                    console.error('Échec de la récupération des patients');
+                    alert(error?.response?.data?.erreur || "Echec de récupération des patients !");
                     console.log(error)
                 })
         }
@@ -96,7 +95,7 @@ export const UpdatePatient: React.FC = () => {
             form.append(key, formData[key as keyof FormDataType] as Blob | string);
         }
         
-        axios.put(`${apiUrl}dossier_medical/patient/`, form,{
+        axios.put(`${apiUrl}/dossier_medical/patient/`, form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -108,8 +107,8 @@ export const UpdatePatient: React.FC = () => {
             router.push(`/listePatients`)
         })
         .catch(error =>{
+            alert(error?.response?.data?.erreur || "Erreur lors de la modification !");
             setIsSubmitted(false)
-            //alert(error.response.data.non_field_errors[0])
             console.error(error);   
         })
     }

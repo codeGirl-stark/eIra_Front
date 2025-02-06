@@ -21,6 +21,9 @@ export const ListePatient: React.FC = () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [loading, setLoading] = useState<boolean>(true);
     const [patients, setPatients] = useState<PatientInterface[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1); // Page actuelle
+    const [patientsPerPage] = useState<number>(10); // Nombre de patients par page
+
 
 
     //Récupérer les patients du docteur en ligne
@@ -32,7 +35,7 @@ export const ListePatient: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/patient/`, {
+            await axios.get(`${apiUrl}/dossier_medical/patient/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
@@ -42,14 +45,20 @@ export const ListePatient: React.FC = () => {
                     setPatients(response.data); // Enregistre les Patients dans le state
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Échec de la récupération des patients');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la récupération!");
                     console.log(error)
                 })
         }
     
         fetchPatient();
     }, [apiUrl]);
+
+
+    // Pagination : calculer les patients à afficher pour la page actuelle
+    const indexOfLastPatient = currentPage * patientsPerPage;
+    const indexOfFirstPatient = indexOfLastPatient - patientsPerPage;
+    const currentPatients = patients.slice(indexOfFirstPatient, indexOfLastPatient);
+
 
     const handleDelete = async (id : any) => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer ce patient ?")) {
@@ -62,7 +71,7 @@ export const ListePatient: React.FC = () => {
                 return;
             }
 
-            await axios.delete(`${apiUrl}dossier_medical/patient/`, {
+            await axios.delete(`${apiUrl}/dossier_medical/patient/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
@@ -75,13 +84,20 @@ export const ListePatient: React.FC = () => {
                     setLoading(false)
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Erreur lors de la suppression du patient');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la suppression !");
                     console.log(error)
                     setLoading(false)
                 })
         }
     };
+
+    // Changer de page
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+    };
+
+    // Nombre total de pages
+    const totalPages = Math.ceil(patients.length / patientsPerPage);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -141,11 +157,11 @@ export const ListePatient: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {patients.map((patient: PatientInterface, index) => (
+                                {currentPatients.map((patient: PatientInterface, index) => (
                                     <tr key={patient.id}>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                             <p className="text-black dark:text-white font-bold">
-                                                {index + 1}
+                                                {indexOfFirstPatient + 1}
                                             </p>
                                         </td>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 xl:pl-11 sm:text-sm">
@@ -233,9 +249,36 @@ export const ListePatient: React.FC = () => {
                                 ))}
                                 </tbody>
                             </table>
+                        </div>
+
+                        {/* Pagination */}
+                        <div className="flex justify-between mt-4">
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className={`px-4 py-2 text-white bg-blue-500 rounded ${
+                                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+                                }`}
+                            >
+                                Précédent
+                            </button>
+
+                            <span className="text-black dark:text-white font-bold">
+                                Page {currentPage} sur {totalPages}
+                            </span>
+
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className={`px-4 py-2 text-white bg-blue-500 rounded ${
+                                    currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+                                }`}
+                            >
+                                Suivant
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
         </DefaultLayout>
     );

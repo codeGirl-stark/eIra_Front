@@ -12,7 +12,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
         <TokenCheck />
         <Entete />
         
-        <div className="dark:bg-slate-700 dark:text-bodydark">
+        <div className="dark:bg-slate-900 dark:text-bodydark">
             {/* <!-- ===== Page Wrapper Start ===== --> */}
             <div className="flex h-screen overflow-hidden">
                 {/* <!-- ===== Sidebar Start ===== --> */}

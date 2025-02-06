@@ -57,7 +57,7 @@ export const NewPatient: React.FC = () => {
             form.append(key, formData[key as keyof FormDataType] as Blob | string);
         }
         
-        axios.post(`${apiUrl}dossier_medical/patient/`, form,{
+        axios.post(`${apiUrl}/dossier_medical/patient/`, form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -69,8 +69,8 @@ export const NewPatient: React.FC = () => {
             router.push(`/Dossiers/${response.data["id"]}`)
         })
         .catch(error =>{
+            alert(error?.response?.data?.erreur || "Erreur lors de l'enregistrement !");
             setIsSubmitted(false)
-            //alert(error.response.data.non_field_errors[0])
             console.error(error);   
         })
     }

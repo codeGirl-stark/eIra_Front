@@ -69,7 +69,7 @@ export const UpdateVisite: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/patient/`, {
+            await axios.get(`${apiUrl}/dossier_medical/patient/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
@@ -84,8 +84,7 @@ export const UpdateVisite: React.FC = () => {
                     }
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Échec de la récupération des patients');
+                    alert(error?.response?.data?.erreur || "Echec de la récupération!");
                     console.log(error)
                 })
         }
@@ -103,18 +102,17 @@ export const UpdateVisite: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/visite_details/${id}/`, {
+            await axios.get(`${apiUrl}/dossier_medical/visite_details/${id}/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
                 }
             })
                 .then(response =>{
-                    setFormData(response.data); // Enregistre les Patients dans le state
+                    setFormData(response.data); 
                 })
                 .catch(error =>{
-                    //alert(error.response.data.erreur[0])
-                    console.error('Échec de la récupération des patients');
+                    alert(error?.response?.data?.erreur || "Echec de la récupération !");
                     console.log(error)
                 })
         }
@@ -151,7 +149,7 @@ export const UpdateVisite: React.FC = () => {
             form.append(key, formData[key as keyof FormDataType] as Blob | string);
         }
         
-        axios.put(`${apiUrl}dossier_medical/visite/`, form,{
+        axios.put(`${apiUrl}/dossier_medical/visite/`, form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -163,8 +161,8 @@ export const UpdateVisite: React.FC = () => {
             router.push(`/visites`)
         })
         .catch(error =>{
+            alert(error?.response?.data?.erreur || "Echec de modification !");
             setIsSubmitted(false)
-            //alert(error.response.data.non_field_errors[0])
             console.error(error);   
         })
     }

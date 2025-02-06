@@ -26,6 +26,9 @@ const VisitesByDate = () => {
     const [visites, setVisites] = useState<VisiteInterface[]>([]);//Pour enregistrer les visites trouvées
     const [dateVisite, setDateVisite] = useState<string>(""); // Pour la recherche par date
     const [loading, setLoading] = useState<boolean>(true);
+    const [currentPage, setCurrentPage] = useState<number>(1); // Page actuelle
+    const [visitesPerPage] = useState<number>(10); // Nombre de patients par page
+
 
 
     //fonction pour convertir la date
@@ -50,18 +53,18 @@ const VisitesByDate = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/visite/`, {
+            await axios.get(`${apiUrl}/dossier_medical/visite/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
                 }
             })
                 .then(response =>{
-                    setVisites(response.data); // Enregistre les Patients dans le state
+                    setVisites(response.data);
+                    console.log(response.data)
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Échec de la récupération des patients');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la récupération des visites!");
                     console.log(error)
                 })
         }
@@ -89,11 +92,15 @@ const VisitesByDate = () => {
               setVisites(response.data); // Enregistre les Patients dans le state
           })
           .catch(error =>{
-              alert(error.response.data.erreur)
-              console.error('Échec de la récupération des patients');
+                alert(error?.response?.data?.erreur || "Erreur lors du chargement des visites !");
               console.log(error)
           })
     }
+
+    // Pagination : calculer les patients à afficher pour la page actuelle
+    const indexOfLastPatient = currentPage * visitesPerPage;
+    const indexOfFirstPatient = indexOfLastPatient - visitesPerPage;
+    const currentPatients = visites.slice(indexOfFirstPatient, indexOfLastPatient);
 
     // Gérer la soumission du champ de recherche
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,7 +123,7 @@ const VisitesByDate = () => {
                 return;
             }
 
-            await axios.delete(`${apiUrl}dossier_medical/visite/`, {
+            await axios.delete(`${apiUrl}/dossier_medical/visite/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
@@ -125,17 +132,24 @@ const VisitesByDate = () => {
             })
                 .then(() =>{
                     alert("Visite annulée avec succès !"); // Enregistre les Patients dans le state
-                    setVisites((prevVisites) => prevVisites.filter(visite => visite.id !== id));
+                    window.location.reload();                    
                     setLoading(false)
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Erreur lors de la suppression du patient');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la suppression !");
                     console.log(error)
                     setLoading(false)
                 })
         }
     };
+
+    // Changer de page
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+    };
+
+    // Nombre total de pages
+    const totalPages = Math.ceil(visites.length / visitesPerPage);
 
   useEffect(() => {
       window.scrollTo(0, 0);
@@ -233,11 +247,11 @@ const VisitesByDate = () => {
                         </tr>
                       </thead>
                       <tbody>
-                      {visites.map((visite: VisiteInterface, index) => (
+                      {currentPatients.map((visite: VisiteInterface, index) => (
                           <tr key={visite.id}>
                               <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                   <p className="text-black dark:text-white font-bold">
-                                    {index + 1}
+                                    {indexOfFirstPatient + 1}
                                   </p>
                               </td>
                               <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 xl:pl-11 sm:text-sm">
@@ -292,6 +306,33 @@ const VisitesByDate = () => {
                       ))}
                       </tbody>
                   </table>
+                </div>
+
+                {/* Pagination */}
+                <div className="flex justify-between mt-4">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-4 py-2 text-white bg-blue-500 rounded ${
+                            currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+                        }`}
+                    >
+                        Précédent
+                    </button>
+
+                    <span className="text-black dark:text-white font-bold">
+                        Page {currentPage} sur {totalPages}
+                    </span>
+
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`px-4 py-2 text-white bg-blue-500 rounded ${
+                            currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+                        }`}
+                    >
+                        Suivant
+                    </button>
                 </div>
             </div>
           )}

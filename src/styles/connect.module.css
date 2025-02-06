@@ -7,7 +7,7 @@
 }
 
 .section {
-    @apply w-full py-[2%] ml-2 lg:ml-10 lg:w-[30%];
+    @apply w-full py-[3%] ml-2 lg:ml-10 lg:w-[30%];
 }
 
 .logo {

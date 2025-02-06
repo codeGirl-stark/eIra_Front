@@ -99,7 +99,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
       <div className="flex flex-col duration-300 ease-linear overflow-y-auto">
         {/* <!-- Sidebar Menu --> */}
-        <nav className="mt-5 py-4 lg:mt-9 xl:px-6">
+        <nav className="mt-5 py-4 lg:mt-9 xl:px-2">
           {/* <!-- Menu Group --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-gray-400">
@@ -110,7 +110,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Dashboard --> */}
               <li>
                 <Link
-                  href="#"
+                  href="../../dashboard"
                   className={`group relative flex items-center text-sm xl:text-base gap-2.5 rounded-lg px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-slate-700 focus:bg-slate-700 dark:hover:bg-meta-4 ${
                     pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
                   }`}
@@ -309,90 +309,33 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </SidebarLinkGroup>
               {/* <!-- End Menu Item RDV --> */}
 
-              {/* <!-- Menu Item Journal et Export --> */}
-                <SidebarLinkGroup
-                  activeCondition={
-                    pathname === '/' || pathname.includes('dashboard')
-                  }
-                >
-                  {(handleClick, open) => {
-                    return (
-                      <React.Fragment>
-                          <Link href="#" className={`group relative flex items-center text-sm xl:text-base gap-2.5 rounded-lg px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-slate-700 focus:bg-slate-700 dark:hover:bg-meta-4 ${
-                            (pathname === '/' ||
-                              pathname.includes('dashboard')) &&
-                            'bg-graydark dark:bg-meta-4'
-                          }`} onClick={(e : any) => {
-                              e.preventDefault();
-                              if (sidebarExpanded) {
-                                handleClick();
-                              }else{setSidebarExpanded(true)}
-                            }}> 
-                              <svg 
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 -960 960 960" 
-                                className="fill-current"
-                                width="20"
-                                height="20"
-                                fill="none"
-                              >
-                                <path fill="" d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/>
-                              </svg>
-                              Journal et Export
-                              <svg
-                              className={`absolute -right-1 top-1/2 -translate-y-1/2 fill-current ${
-                                  open && 'rotate-180'
-                              }`}
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              >
-                              <path
-                                  fillRule="evenodd"
-                                  clipRule="evenodd"
-                                  d="M4.41107 6.9107C4.73651 6.58527 5.26414 6.58527 5.58958 6.9107L10.0003 11.3214L14.4111 6.91071C14.7365 6.58527 15.2641 6.58527 15.5896 6.91071C15.915 7.23614 15.915 7.76378 15.5896 8.08922L10.5896 13.0892C10.2641 13.4147 9.73651 13.4147 9.41107 13.0892L4.41107 8.08922C4.08563 7.76378 4.08563 7.23614 4.41107 6.9107Z"
-                                  fill=""
-                              />
-                              </svg>
-                          </Link>
-                        {/* <!-- Dropdown Menu Start --> */}
-                        <div
-                          className={`translate transform overflow-hidden ${
-                            !open && 'hidden'
-                          }`}
-                        >
-                          <ul className="mt-4 mb-5 flex text-xs xl:text-sm flex-col gap-2.5 pl-3 ml-10 text-gray-400 border-l-2">
-                            <li>
-                              <Link
-                                href="#"
-                                className='hover:text-white focus:text-white'
-                              >
-                                Log
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                href="../../dbExport"
-                                className='hover:text-white focus:text-white'
-                              >
-                                Exporter la base de données
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                        {/* <!-- Dropdown Menu End --> */}
-                      </React.Fragment>
-                    );
-                  }}
-                </SidebarLinkGroup>
-              {/* <!-- End Menu Item Journal et Export --> */}
+              {/* <!-- Menu Item Logs --> */}
+              <li>
+                <Link
+                  href="../../doctorLogs"
+                  className={`group relative flex items-center text-sm xl:text-base gap-2.5 rounded-lg px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-slate-700 focus:bg-slate-700 dark:hover:bg-meta-4 ${
+                    pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
+                  }`}
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      height="20" 
+                      viewBox="0 -960 960 960" 
+                      width="20" 
+                      fill="none"
+                      className="fill-current"
+                    >
+                      <path d="M720-360v-240q0-17 11.5-28.5T760-640q17 0 28.5 11.5T800-600v240h-80Zm40 200H565h195Zm-600-40q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h600q33 0 56.5 23.5T840-760H160v480h72l79 80H160ZM593-80q-24 0-46-9t-39-26L304-320l33-34q14-14 34-19t40 0l69 20v-287q0-17 11.5-28.5T520-680q17 0 28.5 11.5T560-640v393l-98-28 103 103q6 6 13 9t15 3h167q33 0 56.5-23.5T840-240v-160q0-17 11.5-28.5T880-440q17 0 28.5 11.5T920-400v160q0 66-47 113T760-80H593Zm7-280v-320q0-17 11.5-28.5T640-720q17 0 28.5 11.5T680-680v320h-80Z"/>
+                    </svg>
+                    Vos actions
+                </Link>
+              </li>
+              {/* <!-- End Menu Item Logs --> */}
 
               {/* <!-- Menu Item Liste RDV--> */}
               <li>
                   <Link
-                    href="#"
+                    href="../../ParametresDocteur"
                     className={`group relative flex items-center text-sm xl:text-base gap-2.5 rounded-lg px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-slate-700 focus:bg-slate-700 dark:hover:bg-meta-4 ${
                       pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
                     }`}

@@ -9,7 +9,7 @@ import Link from "next/link";
 
 
 interface FormDataType {
-    dateRdv : Date;
+    dateRdv : Date|any;
     motif : string;
     patient : string;
 }
@@ -28,7 +28,7 @@ export const NewVisite: React.FC = () => {
     const [patients, setPatients] = useState<PatientInterface[]>([]);
 
     const [formData, setFormData] = useState<FormDataType>({
-        dateRdv : new Date(),
+        dateRdv : "",
         motif : "",
         patient : "",
     });
@@ -42,7 +42,7 @@ export const NewVisite: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}dossier_medical/patient/`, {
+            await axios.get(`${apiUrl}/dossier_medical/patient/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
@@ -52,8 +52,7 @@ export const NewVisite: React.FC = () => {
                     setPatients(response.data); // Enregistre les Patients dans le state
                 })
                 .catch(error =>{
-                    alert(error.response.data.erreur)
-                    console.error('Échec de la récupération des patients');
+                    alert(error?.response?.data?.erreur || "Erreur lors de la récupération des patients !");
                     console.log(error)
                 })
         }
@@ -89,7 +88,7 @@ export const NewVisite: React.FC = () => {
             form.append(key, formData[key as keyof FormDataType] as Blob | string);
         }
         
-        axios.post(`${apiUrl}dossier_medical/visite/`, form,{
+        axios.post(`${apiUrl}/dossier_medical/visite/`, form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -101,8 +100,8 @@ export const NewVisite: React.FC = () => {
             router.push('visites')
         })
         .catch(error =>{
+            alert(error?.response?.data?.erreur || "Erreur lors de l'enregistrement !");
             setIsSubmitted(false)
-            //alert(error.response.data.non_field_errors[0])
             console.error(error);   
         })
     }
@@ -142,11 +141,7 @@ export const NewVisite: React.FC = () => {
                                             type="datetime-local"
                                             name="dateRdv"
                                             required
-                                            value={
-                                                formData.dateRdv instanceof Date
-                                                  ? formData.dateRdv.toISOString().slice(0, 16) // Convertir en "YYYY-MM-DDTHH:mm"
-                                                  : formData.dateRdv // Gérer le cas où c'est déjà une chaîne
-                                            }
+                                            value={formData.dateRdv}
                                             onChange={handleChange}
                                             className="w-full cursor-pointer rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                         />

@@ -1,14 +1,64 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from "react";
+import axios from "axios";
 import DropdownMessage from './DropdownMessage';
 import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import Image from 'next/image';
 
-const Header = (props: {
-  sidebarOpen: string | boolean | undefined;
-  setSidebarOpen: (arg0: boolean) => void;
-}) => {
+interface SearchInterface {
+  users: { id: number; username: string }[];
+  doctors: { id: number; specialite: string }[];
+  patients: { id: number; nom: string; prenom: string }[];
+  dossiers: { id: number; numDossier: string }[];
+}
+
+const Header = (props: {sidebarOpen: string | boolean | undefined;setSidebarOpen: (arg0: boolean) => void;}) => {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [results, setResults] = useState<SearchInterface | null>(null);
+
+
+    const fetchResults = async () => {
+      setLoading(true);
+
+      const access = localStorage.getItem('access_token');
+      if (!access) {
+          router.push('../../doctorLogin')
+          return;
+      }
+
+      axios.post(`${apiUrl}/medecin/search/`, {"q": query},{
+          headers: {
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${access}`,  // Si authentification requise
+          }
+      })
+      .then(response =>{
+        setLoading(false);
+        setResults(response.data.results);
+      })
+      .catch(error =>{
+          setLoading(false);
+          alert(error?.response?.data?.erreur || "Erreur lors de la recherche !");
+          console.error(error);   
+      })
+  }
+
+
+  useEffect(() => {
+    if (query.trim().length > 0) { // Vérifie si la chaîne n'est pas vide
+      fetchResults();
+    } else {
+        setResults(null);
+    }
+  }, [query]);
+
+
   return (
     <header className="sticky top-0 z-999 flex w-full bg-white dark:bg-blue-950 shadow-xl">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
@@ -91,10 +141,46 @@ const Header = (props: {
               <input
                 type="text"
                 placeholder="Rechercher..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 className="w-full bg-transparent pl-9 pr-4 text-black focus:outline-none dark:text-white xl:w-125"
               />
             </div>
           </form>
+
+          {query.length > 1 && (
+            <div className="absolute z-50 mt-2 w-[50%] bg-white dark:bg-blue-950 shadow-lg rounded-lg">
+              {loading && <p className="text-gray-500 dark:text-blue-100 p-2">Recherche en cours...</p>}
+
+              {!loading && results && Object.values(results).every(arr => arr.length === 0) && (
+                <p className="text-gray-500 dark:text-blue-100 p-2">Aucun résultat</p>
+              )}
+
+              {!loading && results?.users?.map((user) => (
+                <p key={user.id} className="p-5 border-b border-gray-600 w-[100%] dark:text-blue-100 hover:bg-gray-100 dark:hover:bg-gray-600">
+                  {user.username} (Utilisateur)
+                </p>
+              ))}
+              
+              {!loading && results?.doctors?.map((doctor) => (
+                <p key={doctor.id} className="p-5 border-b border-gray-600 w-[100%] dark:text-blue-100 hover:bg-gray-100 dark:hover:bg-gray-600">
+                  {doctor.specialite} (Profil Médecin)
+                </p>
+              ))}
+              
+              {!loading && results?.patients?.map((patient) => (
+                <p key={patient.id} className="p-5 border-b border-gray-600 w-[100%] dark:text-blue-100 hover:bg-gray-100 dark:hover:bg-gray-600">
+                  {patient.nom} {patient.prenom} (Patient)
+                </p>
+              ))}
+              
+              {!loading && results?.dossiers?.map((dossier) => (
+                <p key={dossier.id} className="p-5 border-b border-gray-600 w-[100%] dark:text-blue-100 hover:bg-gray-100 dark:hover:bg-gray-600">
+                  {dossier.numDossier} (Dossier Médical)
+                </p>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
@@ -102,14 +188,6 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
             {/* <!-- Dark Mode Toggler --> */}
-
-            {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
-            {/* <!-- Notification Menu Area --> */}
-
-            {/* <!-- Chat Notification Area --> */}
-            <DropdownMessage />
-            {/* <!-- Chat Notification Area --> */}
           </ul>
 
           {/* <!-- User Area --> */}

@@ -108,7 +108,7 @@ export default function Step6({ formData, handleChange,prevStep, isSubmitted}) {
                         <div className="flex flex-col gap-5 p-10">
                                 {/* section Réfractaire */}
                                 <div >
-                                            <label className="label ">
+                                    <label className="label ">
                                     <span className="label-text text-sm text-black dark:text-white mr-5">Réfractaire</span>
                                     <input 
                                         type="checkbox" 

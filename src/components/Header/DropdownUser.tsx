@@ -4,13 +4,14 @@ import ClickOutside from '../ClickOutside';
 import { useState, useEffect } from "react";
 import UserInfo from "../userInfo";
 import { useRouter } from 'next/router';
+import avatarImage from '../../../public/avatar.png';
 import axios from 'axios';
 
 const DropdownUser = () => {
     const router = useRouter()
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    const [profilePicture, setProfilePicture] = useState("/avatar.png");
+    const [profilePicture, setProfilePicture] = useState(avatarImage);
 
     useEffect(() => {
         const fetchProfilePicture = async () => {
@@ -20,7 +21,7 @@ const DropdownUser = () => {
                 return;
             }
 
-            axios.get(`${apiUrl}medecin/photoProfile/`,{
+            axios.get(`${apiUrl}/medecin/photoProfile/`,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -28,15 +29,14 @@ const DropdownUser = () => {
             })
             .then(response =>{
                 // Récupérer l'avatar (ou une valeur par défaut si l'avatar est null ou non défini)
-                const avatarUrl = response.data[0].avatar
-                ? response.data[0].avatar // URL de l'avatar si disponible
-                : "/avatar.png"; // Avatar par défaut
+                const avatarUrl = (response.data && response.data[0] && response.data[0].avatar) ? response.data[0].avatar : avatarImage;
+
 
                 // Définir la photo de profil dans le state
                 setProfilePicture(avatarUrl);
             })
             .catch(error =>{
-                //alert(error)
+                alert(error?.response?.data?.erreur || "Erreur lors du chargement de la photo !");
                 console.error("Error fetching profile picture", error)
             })
         };
@@ -103,7 +103,7 @@ const DropdownUser = () => {
                     {/* <!-- Dropdown Start --> */}
                     {dropdownOpen && (
                         <div
-                        className={`absolute right-0 mt-4 flex w-[400%] lg:w-[200%] flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-blue-950 dark:text-white`}
+                        className={`absolute right-0 mt-4 flex w-auto lg:w-[150%] flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-blue-950 dark:text-white`}
                         >
                         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-8 dark:border-strokedark">
                             <li>
@@ -152,7 +152,7 @@ const DropdownUser = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="#"
+                                    href="../../ParametresDocteur"
                                     className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                                 >
                                     <svg
