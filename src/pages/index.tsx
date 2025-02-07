@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import Head from "next/head";
 import Navbar from "@/components/HomePage/Navbar";
 import { Container } from "@/components/HomePage/Container";
 import { Hero } from "@/components/HomePage/Hero";
