@@ -194,7 +194,7 @@ export const UpdateVisite: React.FC = () => {
             </Link>
 
             <form onSubmit={handleSubmit}>
-                <div className="flex justify-center items-center p-10 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <div className="flex justify-center items-center lg:p-10 bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <div className="grid grid-cols-1 gap-9 sm:grid-cols-1 mx-auto w-full">
                         <div className="flex flex-col gap-9">
                         {/* File upload */}
