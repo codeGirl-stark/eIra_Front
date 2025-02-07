@@ -9,6 +9,7 @@ import { Benefits } from "@/components/HomePage/Benefits";
 import { Faq } from "@/components/HomePage/Faq";
 import { Cta } from "@/components/HomePage/Cta";
 import Footer from "@/components/HomePage/Footer";
+import Entete from "@/components/Entete";
 
 import { benefitOne, benefitTwo } from "@/components/HomePage/data";
 
@@ -16,14 +17,8 @@ import { benefitOne, benefitTwo } from "@/components/HomePage/data";
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>eIra - L&apos;application du médecin</title>
-        <meta
-          name="description"
-          content="Gérer vos Patients autrment"
-        />
-        <link rel="icon" href="/Logo aliklan-fav.ico" />
-      </Head>
+      <Entete />
+      
       <Navbar />
 
       <Container>

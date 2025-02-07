@@ -298,8 +298,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               >
                                 Toutes les visites
                               </Link>
-                            </li>
-                            
+                            </li> 
                           </ul>
                         </div>
                         {/* <!-- Dropdown Menu End --> */}
