@@ -182,10 +182,10 @@ export const Dashboard: React.FC = () =>  {
     const fetchStadeData = async () => {
       const response = [
         { Stade: "I", stadevalue: statistiques?.stade_0.percentage },
-        { Stade: "II", stadevalue: statistiques?.typeHisto_1.percentage },
-        { Stade: "III", stadevalue: statistiques?.typeHisto_2.percentage },
-        { Stade: "IVA", stadevalue: statistiques?.typeHisto_3.percentage },
-        { Stade: "IVB", stadevalue: statistiques?.typeHisto_4.percentage },
+        { Stade: "II", stadevalue: statistiques?.stade_1.percentage },
+        { Stade: "III", stadevalue: statistiques?.stade_2.percentage },
+        { Stade: "IVA", stadevalue: statistiques?.stade_3.percentage },
+        { Stade: "IVB", stadevalue: statistiques?.stade_4.percentage },
       ];
 
       
