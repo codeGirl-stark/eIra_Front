@@ -51,7 +51,6 @@ export const Login : React.FC = () =>{
                     })
                     .then(() =>{
                         router.push('/admin/adminDashboard')
-                        alert('Vous êtes connecté')
                     })
                     .catch(error =>{
                         setIsSubmitted(false)

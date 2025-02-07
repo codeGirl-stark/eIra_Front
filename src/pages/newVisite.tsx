@@ -184,7 +184,7 @@ export const NewVisite: React.FC = () => {
                                     {/* fin section patient */}
 
                                     <div className="flex flex-col lg:justify-between">  
-                                        <Link href="/newPatient" className="dark:text-white flex ">
+                                        <Link href="/newPatient" className="dark:text-white flex mb-5 ">
                                             <svg 
                                                 className="fill-current duration-300 ease-in-out"
                                                 xmlns="http://www.w3.org/2000/svg" 
