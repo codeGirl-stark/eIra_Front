@@ -237,6 +237,7 @@ export const NewDossier: React.FC = () => {
             .then(() => {
                 setIsSubmitted(false);
                 alert("Dossier créé avec succès");
+                router.push('../listePatients')
             })
             .catch((error) => {
                 alert(error?.response?.data?.erreur || "Erreur lors de la création !");

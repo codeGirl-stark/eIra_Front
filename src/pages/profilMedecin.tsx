@@ -98,7 +98,7 @@ export const ProfilMedecin: FC = () => {
 
         if (profileExists) {
             // Mettre à jour le profil existant
-            axios.patch(`${apiUrl}/medecin/profile/`, form, {
+            axios.put(`${apiUrl}/medecin/profile/`, form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${access}`,
