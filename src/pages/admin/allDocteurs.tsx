@@ -1,6 +1,6 @@
 import Loader from "@/common/Loader";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ interface MedecinInterface {
     id : number;
     username : string;
     email : string;
+    institution_username : string;
     is_active : boolean;
 }
 
@@ -56,35 +57,36 @@ export const ListePatient: React.FC = () => {
     const indexOfFirstMedecin = indexOfLastMedecin - medecinsPerPage;
     const currentMedecins = medecins.slice(indexOfFirstMedecin, indexOfLastMedecin);
 
-    const deactivateDoctor = async (id : any) => {
-        if (window.confirm("Voulez-vous vraiment désactiver ce médecin ?")) {
+    const toggleAssistant = async (id: number, currentStatus: boolean) => {
+        if (window.confirm(`Voulez-vous vraiment ${currentStatus ? "désactiver" : "activer"} ce médecin ?`)) {
             setLoading(true);
-            console.error(null);
-
-            const accessToken = localStorage.getItem('access_token');
+            const accessToken = localStorage.getItem("access_token");
             if (!accessToken) {
                 router.push("/admin/login");
                 return;
             }
 
-            await axios.patch(`${apiUrl}/admin_app/doctors/${id}/`,{'is_active': false}, {
+            await axios.patch(`${apiUrl}/admin_app/doctors/${id}/`,{'is_active': !currentStatus}, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
                 },
             })
                 .then(() =>{
-                    alert("Médecin désactivé avec succès !"); // Enregistre les Patients dans le state
+                    alert(`Médecin ${currentStatus ? "désactivé" : "activé"} avec succès !`);
+                    setMedecins((prev) =>
+                        prev.map((doc) =>
+                            doc.id === id ? { ...doc, is_active: !currentStatus } : doc
+                    ));
                     setLoading(false)
                 })
                 .catch(error =>{
                     alert(error?.response?.data?.erreur || "Erreur lors de la désactivation !");
                     console.log(error)
                     setLoading(false)
-                })
+            })
         }
-    }
-
+    };
 
     const handleDelete = async (id : any) => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer ce medecin ?")) {
@@ -138,21 +140,6 @@ export const ListePatient: React.FC = () => {
         <DefaultLayout>
             <Breadcrumb pageName="Liste des Médecins" />
 
-            <div className="flex justify-end my-5">
-                <Link href="/admin/newDocteur" className="dark:text-white flex ">
-                    <svg 
-                        className="fill-current duration-300 ease-in-out"
-                        xmlns="http://www.w3.org/2000/svg" 
-                        height="18px" 
-                        viewBox="0 -960 960 960" 
-                        width="24px" 
-                        fill="none">
-                        <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-                    </svg>
-                    Ajouter un médecin
-                </Link>
-            </div>
-
             {medecins.length == 0 ? (
             <p className="dark:text-white text-xl">Aucun Médecin Enregistré.</p>
             ) :(
@@ -174,6 +161,9 @@ export const ListePatient: React.FC = () => {
                                             Email
                                         </th>
                                         <th className="min-w-[120px] py-4 px-4 font-medium lg:text-base text-black dark:text-white">
+                                            Institution
+                                        </th>
+                                        <th className="min-w-[120px] py-4 px-4 font-medium lg:text-base text-black dark:text-white">
                                             Medecin actif
                                         </th>
                                         <th className="py-4 px-4 font-medium lg:text-base text-black dark:text-white">
@@ -182,14 +172,14 @@ export const ListePatient: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {currentMedecins.map((medecin: MedecinInterface) => (
+                                {currentMedecins.map((medecin: MedecinInterface, index:number) => (
                                     <tr key={medecin.id}>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                             <p className="text-black dark:text-white font-bold">
-                                                {indexOfFirstMedecin + 1}
+                                                {indexOfFirstMedecin + index + 1}
                                             </p>
                                         </td>
-                                        <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 xl:pl-11 sm:text-sm">
+                                        <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                             <h5 className="text-black dark:text-white">
                                                 {medecin.username}
                                             </h5>
@@ -200,6 +190,11 @@ export const ListePatient: React.FC = () => {
                                             </p>
                                         </td>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
+                                            <p className="text-black dark:text-white">
+                                                {medecin.institution_username}
+                                            </p>
+                                        </td>
+                                        <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 xl:pl-11 sm:text-sm">
                                             <p className="text-black dark:text-white">
                                                 {medecin.is_active? "oui":"non"}
                                             </p>
@@ -221,20 +216,17 @@ export const ListePatient: React.FC = () => {
                                                         </svg>
                                                     </button>
                                                 </Link>
-                                                <button 
-                                                    onClick={() => deactivateDoctor(medecin.id)}
-                                                    className="hover:text-primary pt-2">
-                                                    <svg 
-                                                        xmlns="http://www.w3.org/2000/svg" 
-                                                        viewBox="0 -960 960 960" 
-                                                        className="fill-current"
-                                                        width="20"
-                                                        height="20"
-                                                        fill="none"
-                                                    >
-                                                        <path d="M280-280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680q50 0 90.5 22t69.5 58h320q50 0 85 35t35 85q0 50-35 85t-85 35H440q-29 36-69.5 58T280-280Zm0-200Zm196 40h284q17 0 28.5-11.5T800-480q0-17-11.5-28.5T760-520H476q2 9 3 20t1 20q0 9-1 20t-3 20Zm-196 80q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z"/>
-                                                    </svg>
-                                                </button>
+                                                <label className="flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="sr-only peer"
+                                                        checked={medecin.is_active}
+                                                        onChange={() => toggleAssistant(medecin.id, medecin.is_active)}
+                                                    />
+                                                    <div className="w-5 h-3 bg-red-500 rounded-full peer-checked:bg-green-500 transition-all relative">
+                                                        <div className="w-2 h-2 bg-white rounded-full absolute left-0.5 top-0.5 peer-checked:translate-x-5 transition-all"></div>
+                                                    </div>
+                                                </label>
                                                 <button 
                                                     onClick={() => handleDelete(medecin.id)}
                                                     className="hover:text-primary">

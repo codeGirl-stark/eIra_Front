@@ -2,8 +2,7 @@ import axios from "axios";
 import Loader from "@/common/Loader";
 import { useRouter } from "next/router";
 import {useState, useEffect} from "react";
-import styles from "../../../styles/common.module.css"
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Link from "next/link";
 
@@ -12,21 +11,22 @@ interface FormDataType {
     id : number;
     username : string;
     email : string;
+    institution : string;
     is_active : boolean;
 }
 
-export const UpdatePatient: React.FC = () => {
+export const UpdateMedecin: React.FC = () => {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const { id } = router.query; // Récupérer l'ID depuis l'URL
     const [loading, setLoading] = useState<boolean>(true);
-    const [isSubmitted, setIsSubmitted] = useState(false);
 
 
     const [formData, setFormData] = useState<FormDataType>({
         id : 0,
         username : "",
         email : "",
+        institution : "",
         is_active : false,
     });
 
@@ -39,7 +39,7 @@ export const UpdatePatient: React.FC = () => {
                 return;
             }
     
-            await axios.get(`${apiUrl}/admin_app/infoMedecin/${id}/`, {
+            await axios.get(`${apiUrl}/admin_app/infoUser/${id}/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,
@@ -59,7 +59,9 @@ export const UpdatePatient: React.FC = () => {
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+        const { name, type } = e.target;
+        const value = type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
+    
         setFormData({ ...formData, [name]: value });
     };
 
@@ -72,8 +74,6 @@ export const UpdatePatient: React.FC = () => {
             router.push('/admin/login')
             return;
         }
-
-        setIsSubmitted(true);
 
         const form = new FormData();
 
@@ -88,13 +88,11 @@ export const UpdatePatient: React.FC = () => {
             }
         })
         .then(() =>{
-            setIsSubmitted(false)
             alert('Médecin modifié avec succès');
             router.push(`/admin/allDocteurs`)
         })
         .catch(error =>{
             alert(error?.response?.data?.erreur || "Erreur lors de la modification !");
-            setIsSubmitted(false)
             console.error(error);   
         })
     }
@@ -112,7 +110,7 @@ export const UpdatePatient: React.FC = () => {
         <Loader/>
       ) : (
         <DefaultLayout>
-            <Breadcrumb pageName={`Détails du médecin ${formData.username}`} />
+            <Breadcrumb pageName={`Informations du médecin ${formData.username}`} />
 
             <Link href="/admin/allDocteurs">
                 <button 
@@ -133,7 +131,7 @@ export const UpdatePatient: React.FC = () => {
                             <div className="rounded-lg border border-gray-500 bg-white shadow-lg p-6 dark:border-gray-600 dark:bg-blue-950">
                                 <div className="border-b border-gray-400 py-4 px-6 dark:border-slate-500">
                                     <h3 className="font-medium text-base lg:text-lg text-black dark:text-white">
-                                        Modifier le Médecin
+                                        Détails des informations
                                     </h3>
                                 </div>
                                 <div className="flex flex-col gap-5 p-10">
@@ -165,6 +163,20 @@ export const UpdatePatient: React.FC = () => {
                                         />
                                     </div>
 
+                                    <div>
+                                        <label className="mb-3 block text-sm text-black dark:text-white">
+                                            Institution en charge
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="institution"
+                                            value={formData.institution}
+                                            onChange={handleChange}
+                                            className="w-full  rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
+                                            required
+                                        />
+                                    </div>
+
                                     <div >
                                         <label className="label ">
                                             <span className="label-text text-sm text-black dark:text-white mr-5">Statut actif du médecin</span>
@@ -176,19 +188,6 @@ export const UpdatePatient: React.FC = () => {
                                                 className="checkbox checkbox-primary" />
                                         </label>
                                     </div>
-                                    {isSubmitted?(
-                                        <div className="flex justify-end">
-                                            <button type="submit" className={styles.waitingButton}>
-                                                <span className={styles.waitingSpan}></span>
-                                            </button>
-                                        </div>
-                                    ):(
-                                        <div className="flex justify-end">
-                                            <button className="flex btn-wide justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
-                                                Modifier
-                                            </button>
-                                        </div>                                    
-                                    )} 
                                 </div>
                             </div>
                         </div>
@@ -200,4 +199,4 @@ export const UpdatePatient: React.FC = () => {
       )
 };
 
-export default UpdatePatient;
+export default UpdateMedecin;

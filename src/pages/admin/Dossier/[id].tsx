@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Loader from "@/common/Loader";
-import Etape1 from "@/components/admin/InfoDossierPatient/etape1";
-import Etape2 from "@/components/admin/InfoDossierPatient/etape2";
-import Etape3 from "@/components/admin/InfoDossierPatient/etape3";
-import Etape4 from "@/components/admin/InfoDossierPatient/etape4";
-import Etape5 from "@/components/admin/InfoDossierPatient/etape5";
-import Etape6 from "@/components/admin/InfoDossierPatient/etape6";
+import Etape1 from "../../../components/assistantComponents/Steps/etape1";
+import Etape2 from "../../../components/assistantComponents/Steps/etape2";
+import Etape3 from "../../../components/assistantComponents/Steps/etape3";
+import Etape4 from "../../../components/assistantComponents/Steps/etape4";
+import Etape5 from "../../../components/assistantComponents/Steps/etape5";
+import Etape6 from "../../../components/assistantComponents/Steps/etape6";
 import Link from "next/link";
 
 interface FormDataType {
@@ -46,7 +46,7 @@ interface FormDataType {
 export const GetDossier: React.FC = () => {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    const { id } = router.query; // Récupérer l'ID depuis l'URL
+    const { id } = router.query; 
     const [loading, setLoading] = useState<boolean>(true);
     const [currentStep, setCurrentStep] = useState(1);
 

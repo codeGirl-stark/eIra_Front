@@ -3,7 +3,7 @@ import Loader from "@/common/Loader";
 import { useRouter } from "next/router";
 import {useState, useEffect} from "react";
 import styles from "../../styles/common.module.css"
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 

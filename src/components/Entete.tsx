@@ -6,7 +6,7 @@ export const Entete : React.FC = () =>{
           <title>EIra</title>
           <meta
           name="description"
-          content="EIra la plateforme du docteur"
+          content="EIra l'Irathérapie digitale"
           />
           <link rel="icon" href="/image.png"/>
         </Head>

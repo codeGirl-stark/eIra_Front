@@ -223,7 +223,7 @@ export default function Step2({prevStep, formData, handleChange,handleCheckboxCh
                             >
                                 <option value="">Sélectionnez...</option>
                                 <option value="Faible">Faible</option>
-                                <option value="Intermédiaire">Intermédiaire</option>
+                                <option value="Intermediaire">Intermédiaire</option>
                                 <option value="Haut">Haut</option>
                             </select>
                         </div>

@@ -49,12 +49,16 @@ export const Login : React.FC = () =>{
                             'Authorization': `Bearer ${access}`,  // Si authentification requise
                         }
                     })
-                    .then(() =>{
-                        router.push('/admin/adminDashboard')
+                    .then(response =>{
+                        if (response.data.role = "admin") {
+                            router.push('/admin/adminDashboard')
+                        } else {
+                            alert("Cette interface est dédiée uniquement aux administrateurs.")
+                        }
                     })
                     .catch(error =>{
                         setIsSubmitted(false)
-                        alert(error?.response?.data?.erreur || "Erreur lors de la vérification !");
+                        alert(error?.response?.data?.erreur || "Erreur lors de la connexion !");
                     })
                 }
 

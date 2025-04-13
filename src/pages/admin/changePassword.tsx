@@ -1,4 +1,4 @@
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Loader from "@/common/Loader"; 
 import styles from "../../styles/common.module.css"

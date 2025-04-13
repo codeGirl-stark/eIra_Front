@@ -1,4 +1,4 @@
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Loader from "@/common/Loader"; 
 import { useState, useEffect, FC } from "react";
@@ -41,7 +41,7 @@ export const ParamètresAdmin: FC = () => {
             return;
         }
         
-        axios.get(`${apiUrl}/admin_app/infoAdmin/`, {
+        axios.get(`${apiUrl}/admin_app/userInfo`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -122,7 +122,7 @@ export const ParamètresAdmin: FC = () => {
                 return;
             }
 
-            axios.get(`${apiUrl}/medecin/photoProfile/`,{
+            axios.get(`${apiUrl}/admin_app/photoProfile/`,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -170,7 +170,7 @@ export const ParamètresAdmin: FC = () => {
         }
 
         axios.post(
-            `${apiUrl}/medecin/photoProfile/`, formData,{
+            `${apiUrl}/admin_app/photoProfile/`, formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -195,11 +195,11 @@ export const ParamètresAdmin: FC = () => {
 
             const accessToken = localStorage.getItem('access_token');
             if (!accessToken) {
-                router.push("/doctorLogin");
+                router.push("/admin/login");
                 return;
             }
 
-            await axios.delete(`${apiUrl}/medecin/photoProfile/`, {
+            await axios.delete(`${apiUrl}/admin_app/photoProfile/`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,

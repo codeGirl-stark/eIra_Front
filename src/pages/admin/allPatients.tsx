@@ -1,6 +1,6 @@
 import Loader from "@/common/Loader";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -120,11 +120,11 @@ export const ListePatient: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {currentPatients.map((patient: PatientInterface) => (
+                                {currentPatients.map((patient: PatientInterface, index:number) => (
                                     <tr key={patient.id}>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 sm:text-sm">
                                             <p className="text-black dark:text-white font-bold">
-                                                {indexOfFirstPatient + 1}
+                                                {indexOfFirstPatient + index + 1}
                                             </p>
                                         </td>
                                         <td className="border-b border-[#eee] py-5 px-4 dark:border-gray-500 xl:pl-11 sm:text-sm">

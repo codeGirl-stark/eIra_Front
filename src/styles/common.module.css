@@ -14,7 +14,7 @@
     @apply flex h-screen items-center justify-center bg-white;
 }
 .Loader{
-    @apply h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent;
+    @apply h-16 w-16 animate-ping rounded-full border-4 border-solid border-primary;
 }
 
 .input{

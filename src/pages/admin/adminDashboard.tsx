@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import {useEffect, useState} from "react";
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
 import CardDataStats from "@/components/dashboard/CardDataStats";
 
@@ -12,16 +12,23 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointE
 
 
 interface DefaultInterface {
-    "total_users": number,
+  "total_users": number,
+  "users_percentage": number,
 	"total_doctors": number,
-    "total_admin": number,
+  "doctors_percentage": number,
+  "total_admins": number,
+  "admin_percentage" : number,
+  "total_institutions": number,
+  "institu_percentage" : number,
+  "total_assistants": number,
+  "assistants_percentage" : number,
 	"total_patients": number,
 	"total_dossiers": number,
 	"total_logs": number,
-	"active_doctors": number,
-	"inactive_doctors": number,
-	"doctor_percentage_active": number,
-	"doctor_percentage_inactive": number,
+	"active_users": number,
+	"inactive_users": number,
+	"users_percentage_active": number,
+	"users_percentage_inactive": number,
 	"visits_this_week": number,
 	"visits_last_week": number,
 	"visits_this_month": number,
@@ -47,7 +54,7 @@ export const AdminDashboard: React.FC = () =>  {
             return;
         }
         
-        axios.get(`${apiUrl}/admin_app/infoAdmin/`, {
+        axios.get(`${apiUrl}/admin_app/userInfo`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -90,7 +97,7 @@ export const AdminDashboard: React.FC = () =>  {
                 setStats(response.data); // Enregistre les Patients dans le state
             })
             .catch(error =>{
-              alert(error?.response?.data?.erreur || "Erreur lors de la récupération des statistiques !");
+              alert(error?.response?.data?.erreur || " Aucune statistique !");
                 console.log(error)
             })
     }
@@ -100,10 +107,10 @@ export const AdminDashboard: React.FC = () =>  {
 
     // Graphique en anneau - Répartition des utilisateurs
     const userDistributionData = {
-        labels: ['Médecins', 'Admin'],
+        labels: ['Médecins', 'Admin', 'Institutions', 'Assistants'],
         datasets: [{
-            data: [stats?.total_doctors, stats?.total_admin],
-            backgroundColor: ['#36A2EB', 'purple'],
+            data: [stats?.total_doctors, stats?.total_admins, stats?.total_institutions, stats?.total_assistants],
+            backgroundColor: ['khaki', 'purple', 'maroon', 'green'],
         }],
     };
 
@@ -111,8 +118,8 @@ export const AdminDashboard: React.FC = () =>  {
     const doctorStatusData = {
         labels: ['Actifs', 'Inactifs'],
         datasets: [{
-            data: [stats?.active_doctors, stats?.inactive_doctors],
-            backgroundColor: ['#4CAF50', '#F44336'],
+            data: [stats?.active_users, stats?.inactive_users],
+            backgroundColor: ['orange', '#F44336'],
         }],
     };
 
@@ -123,19 +130,19 @@ export const AdminDashboard: React.FC = () =>  {
         datasets: [{
             label: 'Visites',
             data: [stats?.visits_last_week, stats?.visits_this_week, stats?.visits_this_month],
-            borderColor: 'red',
-            backgroundColor: 'rgba(255, 165, 0, 0.5)',
+            borderColor: 'blue',
+            backgroundColor: 'white',
             fill: true,
         }],
     };
 
     // Graphique en barres - Comparaison des ressources
     const resourceData = {
-        labels: ['Medecin', 'Patients', 'Dossiers'],
+        labels: ['Medecin', 'Assistant', 'Patients', 'Dossiers'],
         datasets: [{
             label: 'Total',
-            data: [stats?.total_doctors, stats?.total_patients, stats?.total_dossiers],
-            backgroundColor: ['pink', '#03A9F4', '#8BC34A'],
+            data: [stats?.total_doctors,stats?.total_assistants, stats?.total_patients, stats?.total_dossiers],
+            backgroundColor: ['pink','indigo', 'coral', 'olive'],
         }],
     };
 
@@ -156,11 +163,11 @@ export const AdminDashboard: React.FC = () =>  {
       ) : (
         <DefaultLayout>
     
-            <Breadcrumb pageName={`Bienvenu ${nom}`}/>
+            <Breadcrumb pageName={`Bienvenu ${nom}`}/> 
             {stats && stats.total_users > 0  ?(
               <>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-                  <CardDataStats title="Total Utilisateurs" total={stats.total_users.toString()} rate="100%">
+                <div className="grid mb-5 grid-cols-1 gap-2 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+                  <CardDataStats title="Total Utilisateurs" total={stats.total_users.toString()} rate={`${stats.users_percentage} %`}>
                     <svg
                         className="fill-primary dark:fill-white"
                         width="22"
@@ -183,8 +190,24 @@ export const AdminDashboard: React.FC = () =>  {
                         />
                         </svg>
                     </CardDataStats>
+                    <CardDataStats title="Total Logs" total={stats.total_logs.toString()} rate="100%">
+                        <svg 
+                            className="fill-primary dark:fill-white"
+                            xmlns="http://www.w3.org/2000/svg" 
+                            height="24px" 
+                            viewBox="0 -960 960 960" 
+                            width="24px" 
+                            fill="none"
+                        >
+                            <path 
+                            fill=""
+                            d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z"/>
+                        </svg>
+                    </CardDataStats>
+                </div>
 
-                    <CardDataStats title="Total Médecins" total={stats.total_doctors.toString()} rate="100%">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+                    <CardDataStats title="Total Institutions" total={stats.total_institutions.toString()} rate={`${stats.institu_percentage} %`}>
                         <svg 
                             className="fill-primary dark:fill-white"
                             xmlns="http://www.w3.org/2000/svg" 
@@ -199,7 +222,22 @@ export const AdminDashboard: React.FC = () =>  {
                         </svg>
                     </CardDataStats>
 
-                    <CardDataStats title="Total Patients" total={stats.total_patients.toString()} rate="100%">
+                    <CardDataStats title="Total Médecins" total={stats.total_doctors.toString()} rate={`${stats.doctors_percentage} %`}>
+                        <svg 
+                            className="fill-primary dark:fill-white"
+                            xmlns="http://www.w3.org/2000/svg" 
+                            height="24px" 
+                            viewBox="0 -960 960 960" 
+                            width="24px" 
+                            fill="none"
+                        >
+                            <path
+                                fill="" 
+                                d="M540-80q-108 0-184-76t-76-184v-23q-86-14-143-80.5T80-600v-240h120v-40h80v160h-80v-40h-40v160q0 66 47 113t113 47q66 0 113-47t47-113v-160h-40v40h-80v-160h80v40h120v240q0 90-57 156.5T360-363v23q0 75 52.5 127.5T540-160q75 0 127.5-52.5T720-340v-67q-35-12-57.5-43T640-520q0-50 35-85t85-35q50 0 85 35t35 85q0 39-22.5 70T800-407v67q0 108-76 184T540-80Zm220-400q17 0 28.5-11.5T800-520q0-17-11.5-28.5T760-560q-17 0-28.5 11.5T720-520q0 17 11.5 28.5T760-480Zm0-40Z"/>
+                        </svg>
+                    </CardDataStats>
+
+                    <CardDataStats title="Total Assistants" total={stats.total_assistants.toString()} rate={`${stats.assistants_percentage} %`}>
                         <svg 
                             className="fill-primary dark:fill-white"
                             xmlns="http://www.w3.org/2000/svg" 
@@ -211,21 +249,6 @@ export const AdminDashboard: React.FC = () =>  {
                             <path 
                             fill=""
                             d="M160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q20 0 40 1.5t40 4.5v81q-20-4-40-5.5t-40-1.5q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32h320v80H160Zm80-80h320-320Zm240-240q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80ZM720 0v-200h-80v-240h240l-80 160h80L720 0Z"/>
-                        </svg>
-                    </CardDataStats>
-    
-                    <CardDataStats title="Total Logs" total={stats.total_logs.toString()} rate="100%" >
-                        <svg 
-                            className="fill-primary dark:fill-white"
-                            xmlns="http://www.w3.org/2000/svg" 
-                            height="24px" 
-                            viewBox="0 -960 960 960" 
-                            width="24px" 
-                            fill="none"
-                        >
-                            <path 
-                            fill=""
-                            d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z"/>
                         </svg>
                     </CardDataStats>
                 </div>

@@ -1,6 +1,6 @@
 import Loader from "@/common/Loader";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import axios from "axios";
 import { useRouter } from "next/router";
 import {useEffect, useState} from "react";
