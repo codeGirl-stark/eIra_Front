@@ -161,8 +161,8 @@ export default function Fonctionnement() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-blue-50 dark:text-white dark:bg-blue-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <footer className="bg-blue-50 dark:bg-blue-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 mt-10 dark:text-white ">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
             <div>
               <h3 className="text-lg font-semibold mb-4">Contactez-nous</h3>
