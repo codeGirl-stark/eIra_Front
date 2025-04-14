@@ -202,6 +202,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           }`}
                         >
                           <ul className="mt-4 mb-5 flex text-xs xl:text-sm flex-col gap-2.5 pl-3 ml-10 text-gray-400 border-l-2">
+                          <li>
+                              <Link
+                                href="../../admin/listeAdmin"
+                                className='hover:text-white focus:text-white'
+                              >
+                                Liste des administateurs
+                              </Link>
+                            </li>
                             <li>
                               <Link
                                 href="../../admin/listeInstitu"
