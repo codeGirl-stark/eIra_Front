@@ -161,17 +161,22 @@ export default function Fonctionnement() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-blue-50 dark:bg-blue-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 mt-10 dark:text-white ">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
+      <footer className="bg-gray-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mt-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Contactez-nous</h3>
-              <div className="space-y-3">
-                <a href="tel:+33123456789" className="flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors">
+              <Image src="/logo.png" alt="Logo" width={100} height={20} />              
+              <p className="pt-2 italic">Eira | Eira | Eira | Eira</p> 
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Contactez-nous</h3>
+              <div className="space-y-2">
+                <a href="tel:+33123456789" className="flex items-center space-x-2 text-muted-foreground hover:text-accent transition-colors">
                   <Phone className="h-5 w-5" />
                   <span>+33 1 23 45 67 89</span>
                 </a>
-                <a href="mailto:contact@company.com" className="flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors">
+                <a href="mailto:contact@company.com" className="flex items-center space-x-2 text-muted-foreground hover:text-accent transition-colors">
                   <Mail className="h-5 w-5" />
                   <span>contact@company.com</span>
                 </a>
@@ -179,10 +184,9 @@ export default function Fonctionnement() {
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">Liens Utiles</h3>
+              <h3 className="text-lg font-semibold mb-2">Liens Utiles</h3>
               <p><Link href="fonctionnement" >Fonctionnement de l&apos;application</Link></p> 
               <p><Link href="faq" >FAQ</Link></p> 
-              
             </div>
           </div>
           <div className="mt-8 pt-8 border-t text-center text-muted-foreground">
