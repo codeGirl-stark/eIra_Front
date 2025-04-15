@@ -314,7 +314,7 @@ return loading ? (
   ) : (
     <DefaultLayout>
 
-        <Breadcrumb pageName={`Bienvenu docteur ${nom} `}/>
+        <Breadcrumb pageName={`Bienvenu assistant ${nom} `}/>
         
         {statistiques && statistiques.total_patients.count > 0  ?(
           <>
