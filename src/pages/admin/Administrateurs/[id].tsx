@@ -5,7 +5,6 @@ import {useState, useEffect} from "react";
 import styles from "../../../styles/common.module.css"
 import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import decodeJWT from "../../../../utils/decodeToken";
 import Link from "next/link";
 
 
