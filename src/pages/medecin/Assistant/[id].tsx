@@ -15,6 +15,7 @@ interface FormDataType {
     email : string;
     is_active : boolean;
     doctor : number|null;
+    password:string;
 }
 
 export const UpdateAssistant: React.FC = () => {
@@ -31,6 +32,7 @@ export const UpdateAssistant: React.FC = () => {
         email : "",
         is_active : false,
         doctor : null,
+        password:"",
     });
 
 
@@ -187,6 +189,20 @@ export const UpdateAssistant: React.FC = () => {
                                             type="text"
                                             name="email"
                                             value={formData.email}
+                                            onChange={handleChange}
+                                            className="w-full  rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-3 block text-sm text-black dark:text-white">
+                                           Mot de passe
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="password"
+                                            value={formData.password}
                                             onChange={handleChange}
                                             className="w-full  rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                             required

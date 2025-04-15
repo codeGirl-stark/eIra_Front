@@ -94,7 +94,7 @@ export const UpdateAdmin: React.FC = () => {
         })
         .then(() =>{
             setIsSubmitted(false)
-            alert('Assistant modifié avec succès');
+            alert('Administrateur modifié avec succès');
             router.push(`/admin/listeAdmin`)
         })
         .catch(error =>{
