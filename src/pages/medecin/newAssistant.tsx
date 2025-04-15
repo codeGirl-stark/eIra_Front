@@ -43,7 +43,7 @@ export const NewAssistant: React.FC = () => {
                     doctor: doctorId, // Supposons que l'ID du médecin est stocké sous "id"
                 }));
             } else {
-                console.error("Impossible de récupérer l'ID du médecin depuis le token.");
+                console.error("Erreur lors de la création.");
             }
         }
     }, []);
@@ -64,7 +64,7 @@ export const NewAssistant: React.FC = () => {
         }
 
         if (!formData.doctor) {
-            alert("Impossible de récupérer l'ID du médecin.");
+            alert("Impossible de récupérer le médecin.");
             return;
         }
 

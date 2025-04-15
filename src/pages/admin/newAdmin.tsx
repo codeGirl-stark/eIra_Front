@@ -3,19 +3,17 @@ import Loader from "@/common/Loader";
 import { useRouter } from "next/router";
 import {useState, useEffect} from "react";
 import styles from "../../styles/common.module.css"
-import DefaultLayout from "@/components/institutionComponents/Layout/DefaultLayout";
+import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import decodeJWT from "../../../utils/decodeToken";
 
 
 interface FormDataType {
     username : string;
     email : string;
     password: string;
-    institution : number|null;
 }
 
-export const NewPatient: React.FC = () => {
+export const NewAdmin: React.FC = () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [loading, setLoading] = useState<boolean>(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -25,28 +23,7 @@ export const NewPatient: React.FC = () => {
         username : "",
         email:"",
         password:"",
-        institution : null,
     });
-
-
-    //Obtenir l'id du medecin depuis de acces_token et l'ajouter au formData
-    useEffect(() => {
-        const accessToken = localStorage.getItem("access_token");
-    
-        if (accessToken) {
-            const decodedToken = decodeJWT(accessToken);
-            if (decodedToken && decodedToken.user_id) { // Assurez-vous que le token contient l'ID du médecin
-                const instituId = decodedToken.user_id
-
-                setFormData((prevData) => ({
-                    ...prevData,
-                    institution: instituId, // Supposons que l'ID du médecin est stocké sous "id"
-                }));
-            } else {
-                console.error("Erreur lors de la création.");
-            }
-        }
-    }, []);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -60,15 +37,9 @@ export const NewPatient: React.FC = () => {
 
         const access = localStorage.getItem('access_token');
         if (!access) {
-            router.push('/institution/login')
+            router.push('/admin/login')
             return;
         }
-
-        if (!formData.institution) {
-            alert("Impossible de récupérer l'institution.");
-            return;
-        }
-
 
         setIsSubmitted(true);
 
@@ -78,7 +49,7 @@ export const NewPatient: React.FC = () => {
             form.append(key, formData[key as keyof FormDataType] as Blob | string);
         }
         
-        axios.post(`${apiUrl}/admin_app/doctors/`, form,{
+        axios.post(`${apiUrl}/admin_app/register_admins/`, form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access}`,  // Si authentification requise
@@ -86,8 +57,8 @@ export const NewPatient: React.FC = () => {
         })
         .then(() =>{
             setIsSubmitted(false)
-            alert('Médécin créé avec succès');
-            router.push("/institution/listeDoc")
+            alert('Administrateur créé avec succès');
+            router.push("/admin/listeAdmin")
         })
         .catch(error =>{
             alert(error?.response?.data?.erreur || "Erreur lors de la création du médecin !");
@@ -109,7 +80,7 @@ export const NewPatient: React.FC = () => {
         <Loader/>
       ) : (
         <DefaultLayout>
-            <Breadcrumb pageName="Nouveau Médecin" />
+            <Breadcrumb pageName="Nouvel Administrateur" />
 
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-center items-center lg:p-10 bg-gray-100 dark:bg-gray-800 rounded-lg">
@@ -119,13 +90,13 @@ export const NewPatient: React.FC = () => {
                             <div className="rounded-lg border border-gray-500 bg-white shadow-lg p-6 dark:border-gray-600 dark:bg-blue-950">
                                 <div className="border-b border-gray-400 py-4 px-6 dark:border-slate-500">
                                     <h3 className="font-medium text-base lg:text-lg text-black dark:text-white">
-                                        Enregistrer un Nouveau Médecin
+                                        Enregistrer un Nouvel Administrateur
                                     </h3>
                                 </div>
                                 <div className="flex flex-col gap-5 p-10">
                                     <div>
                                         <label className="mb-3 block text-sm text-black dark:text-white">
-                                            Adresse mail du médecin
+                                            Adresse mail de l&apos;administrateur
                                         </label>
                                         <input
                                             type="text"
@@ -152,7 +123,7 @@ export const NewPatient: React.FC = () => {
                                     </div>
                                     <div>
                                         <label className="mb-3 block text-sm text-black dark:text-white">
-                                            Mot de passe du médecin
+                                            Mot de passe
                                         </label>
                                         <input
                                             type="text"
@@ -172,7 +143,7 @@ export const NewPatient: React.FC = () => {
                                     ):(
                                         <div className="flex justify-end">
                                             <button className="flex btn-wide justify-center rounded-md bg-blue-500 text-white text-sm lg:text-base uppercase p-2 font-medium text-gray hover:bg-opacity-90">
-                                                Créer le medecin
+                                                Créer l&apos;admin
                                             </button>
                                         </div>                                    
                                     )} 
@@ -187,4 +158,4 @@ export const NewPatient: React.FC = () => {
       )
 };
 
-export default NewPatient;
+export default NewAdmin;

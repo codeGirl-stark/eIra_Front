@@ -5,6 +5,7 @@ import {useState, useEffect} from "react";
 import styles from "../../../styles/common.module.css"
 import DefaultLayout from "@/components/adminComponents/Layout/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
+import decodeJWT from "../../../../utils/decodeToken";
 import Link from "next/link";
 
 
@@ -13,6 +14,7 @@ interface FormDataType {
     username : string;
     email : string;
     is_active : boolean;
+    password : string;
 }
 
 export const UpdateAdmin: React.FC = () => {
@@ -28,9 +30,10 @@ export const UpdateAdmin: React.FC = () => {
         username : "",
         email : "",
         is_active : false,
+        password : "",
     });
 
-    //Récupérer le médecin selectionné
+    //Récupérer l'admin selectionné
     useEffect(() => {
         const fetchInstitution = async () => {
             const access = localStorage.getItem('access_token');
@@ -47,6 +50,7 @@ export const UpdateAdmin: React.FC = () => {
             })
                 .then(response =>{
                     setFormData(response.data)
+                    console.log(response.data)
                 })
                 .catch(error =>{
                     alert(error?.response?.data?.erreur || "Erreur lors de la récupération de l'institution !");
@@ -161,6 +165,20 @@ export const UpdateAdmin: React.FC = () => {
                                             type="text"
                                             name="email"
                                             value={formData.email}
+                                            onChange={handleChange}
+                                            className="w-full  rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-3 block text-sm text-black dark:text-white">
+                                           Mot de passe
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="password"
+                                            value={formData.password}
                                             onChange={handleChange}
                                             className="w-full  rounded-lg border border-stroke bg-transparent p-3 outline-none transition file:mr-5 file:rounded file:border-[2px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2 text-sm lg:text-base focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-form-strokedark dark:bg-form-input dark:border-gray-500 dark:file:bg-white/30 dark:text-white"
                                             required

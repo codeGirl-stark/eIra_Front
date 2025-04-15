@@ -90,7 +90,7 @@ export const NewInstitu: React.FC = () => {
                             <div className="rounded-lg border border-gray-500 bg-white shadow-lg p-6 dark:border-gray-600 dark:bg-blue-950">
                                 <div className="border-b border-gray-400 py-4 px-6 dark:border-slate-500">
                                     <h3 className="font-medium text-base lg:text-lg text-black dark:text-white">
-                                        Enregistrer un Nouvelle Institution
+                                        Enregistrer une Nouvelle Institution
                                     </h3>
                                 </div>
                                 <div className="flex flex-col gap-5 p-10">
